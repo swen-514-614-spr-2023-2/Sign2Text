@@ -4,7 +4,11 @@ class ChatroomService{
 
     constructor(){
         this.#currentId = 0;
-        this.#chatRoomDAO = new ChatroomCacheDAO();
+        this.#chatRoomDAO = new ChatroomCacheDAO(); //somehow use dependency injection here
+                                                    //create a factory class and call method on factory class 
+                                                    //here with environment variable that indicates 
+                                                    //type of storage and instantiate accordingly.
+                                                    // ^^ still uses if statements so
     }
 
     enterChatroom(room_id, user){
