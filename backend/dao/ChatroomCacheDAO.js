@@ -1,7 +1,9 @@
+const AbstractDAO = require('./AbstractDAO');
 class ChatroomCacheDAO extends AbstractDAO{
     #map;
 
     constructor(){
+        super();
         this.#map = new Map();
     }
 
@@ -20,3 +22,5 @@ class ChatroomCacheDAO extends AbstractDAO{
         return this.#map.delete(room_id);
     };
 }
+
+module.exports = ChatroomCacheDAO;
