@@ -1,5 +1,5 @@
 class Chatroom{
-    #users = Map();
+    #users = new Map();
     #id;
     #messages;
     #name;
@@ -7,7 +7,7 @@ class Chatroom{
     constructor(id, name){
         this.#id = id;
         this.#messages = [];
-        this.#users = Map();
+        this.#users = new Map();
         this.#name = name;
     }
 
@@ -35,3 +35,5 @@ class Chatroom{
         this.#users.delete(userId);
     };
 }
+
+module.exports = Chatroom;
