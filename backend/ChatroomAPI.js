@@ -3,12 +3,17 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.Server(app);
+const bodyParser = require('body-parser');
+
+const ChatroomService = require('./ChatroomService');
 
 const chatroomService = new ChatroomService();
 
 
 const cors = require('cors');
 app.use(cors());
+app.use(bodyParser.json()) // for parsing application/json
+
 
 
 const io = require('socket.io')(server, {
@@ -45,7 +50,11 @@ io.on('connection',(socket)=>{
 
 //create new room
 app.post('/chatroom',(req,res)=>{
-    
+    console.log('Recieved request');
+    const body = req.body;
+    console.log(body);
+    const chRoomId = chatroomService.createChatroom(body['name']);
+    res.status(200).send({roomId : chRoomId});
 });
 
 //delete chatroom
