@@ -22,11 +22,13 @@ class ChatroomService{
 
     sendMessage(message){
         const chatroom = this.#chatRoomDAO.getChatroom(message['roomId']);
+        console.log('Adding message to chatroom');
         chatroom.addMessage(message);
     };
 
     createChatroom(name){
         let cm = new Chatroom(this.#currentId++, name);
+        this.#chatRoomDAO.createChatroom(cm)
         console.log(`Chatroom with id ${cm.id} created`);
         return cm.id;
     };

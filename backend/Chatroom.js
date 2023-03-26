@@ -25,6 +25,7 @@ class Chatroom{
 
     addMessage(message){
         this.#messages.push(message);
+        console.log(`Added Message ${message}`);
     };
 
     addUser(user){

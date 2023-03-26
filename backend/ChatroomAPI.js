@@ -33,6 +33,7 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('chat message',(msg)=>{
+        console.log(msg);
         chatroomService.sendMessage(msg);
         io.emit(`room#${msg['roomId']}`, msg);
     });
@@ -50,7 +51,7 @@ io.on('connection',(socket)=>{
 
 //create new room
 app.post('/chatroom',(req,res)=>{
-    console.log('Recieved request');
+    console.log('Recieved request to create chatroom');
     const body = req.body;
     console.log(body);
     const chRoomId = chatroomService.createChatroom(body['name']);
@@ -59,7 +60,11 @@ app.post('/chatroom',(req,res)=>{
 
 //delete chatroom
 app.delete('/chatroom',(req,res)=>{
-
+    console.log('Recieved request to delete chatroom');
+    const body = req.body;
+    console.log(`Body: ${body}`);
+    chatroomService.deleteChatroom(body['roomId']);
+    res.status(200).end();
 });
 
 
