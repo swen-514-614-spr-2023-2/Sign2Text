@@ -2,6 +2,8 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import "../styles/Home.css"
 import {StyledLink} from '../utils/styles'
+
+
 const Home = () => {
     return (
         <div className="Home">

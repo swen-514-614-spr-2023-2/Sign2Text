@@ -10,7 +10,6 @@ import NonAls from './pages/NonAsl';
 import Navbar from './components/Navbar';
 
 
-
 function App() {
 
   return (
@@ -23,9 +22,8 @@ function App() {
           <Route  path="/" element={<Home/>}/>
           <Route  path="/rooms" element={<Rooms/>}/>
           <Route  path="/createRoom" element={<Create/>}/>
-          <Route  path="/AlsView" element={<Als/>}/>
-          <Route  path="/NonAlsView" element={<NonAls/>}/>
-          {/* <Route  path="/AlsView/:id" element={<ProjectDisplay/>}/> */}
+          <Route  path="/AlsView/:roomid" element={<Als/>}/>
+          <Route  path="/NonAlsView/:roomid" element={<NonAls/>}/>
           <Route path='*' element={<NotFound />} />
         </Routes>
 
