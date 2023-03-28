@@ -15,10 +15,12 @@ class ChatroomCacheDAO extends AbstractDAO{
     createChatroom(chatroom){
         console.log('Creating Chatroom with id '+chatroom['id']);
         this.#map.set(chatroom['id'],chatroom);
+        return true;
     };
 
     updateChatroom(chatroom){
         this.#map.set(chatroom.id,chatroom);
+        return true;
     };
 
     deleteChatroom(room_id){

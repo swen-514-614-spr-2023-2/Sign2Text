@@ -22,6 +22,7 @@ class ChatroomService{
 
     sendMessage(message){
         const chatroom = this.#chatRoomDAO.getChatroom(message['roomId']);
+        
         console.log('Adding message to chatroom');
         chatroom.addMessage(message);
     };
