@@ -9,7 +9,6 @@ class ChatroomCacheDAO extends AbstractDAO{
 
     getChatroom(room_id){
         console.log(`Getting room with id ${room_id}, ${typeof(room_id)}`);
-        console.log(`Current map: ${[...this.#map.keys()]}`);
         return this.#map.get(room_id);
     };
     createChatroom(chatroom){
@@ -19,10 +18,18 @@ class ChatroomCacheDAO extends AbstractDAO{
     };
 
     updateChatroom(chatroom){
-        this.#map.set(chatroom.id,chatroom);
-        return true;
+        if(this.#map.has(chatroom['id'])){
+            this.#map.set(chatroom.id,chatroom);
+            return true;
+        }
+        else return false;
     };
 
+    /**
+     * 
+     * @param {*} room_id id of chatroom to be deleted
+     * @returns true if chatroom was deleted, else false
+     */
     deleteChatroom(room_id){
         return this.#map.delete(room_id);
     };
