@@ -1,26 +1,3 @@
-# from flask import Flask, request
-# import uuid
-# from flask_cors import CORS
-# from datetime import datetime
-
-# app = Flask(__name__)
-# CORS(app)
-
-
-# @app.route('/upload-image', methods=['POST'])
-# def upload_image():
-#     if 'image' not in request.files:
-#         return 'No image provided', 400
-
-#     file = request.files['image']
-#     file.save(datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f") + ".jpg")
-
-#     return 'Image uploaded successfully', 200
-
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
-
 import model
 from datetime import datetime
 import time
@@ -34,7 +11,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, async_mode="eventlet", cors_allowed_origins="*")
 #  async_mode='eventlet',
 
 
