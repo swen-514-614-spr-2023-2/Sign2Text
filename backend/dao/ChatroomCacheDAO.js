@@ -13,7 +13,8 @@ class ChatroomCacheDAO extends AbstractDAO{
     };
     createChatroom(chatroom){
         console.log('Creating Chatroom with id '+chatroom['id']);
-        this.#map.set(chatroom['id'],chatroom);
+        this.#map.set(Number(chatroom['id']),chatroom);
+        console.log(`In cache: ${this.#map}`);
         return true;
     };
 
@@ -33,6 +34,21 @@ class ChatroomCacheDAO extends AbstractDAO{
     deleteChatroom(room_id){
         return this.#map.delete(room_id);
     };
+
+    getAll(){
+        // console.log(this.#map);
+        // return this.#map;
+
+        let ret = [];
+        this.#map.forEach(e=>{
+            let t = {};
+            t['roomId'] = e['id'];
+            t['name'] = e['name'];
+            ret.push(t);
+        });
+
+        return ret;
+    }
 }
 
 module.exports = ChatroomCacheDAO;

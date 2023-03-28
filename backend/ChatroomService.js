@@ -62,6 +62,10 @@ class ChatroomService{
     deleteChatroom(roomId){
         return this.#chatRoomDAO.deleteChatroom(roomId);
     };
+
+    getAllChatrooms(){
+        return this.#chatRoomDAO.getAll();
+    }
 }
 
 module.exports = ChatroomService;

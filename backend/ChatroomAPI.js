@@ -34,14 +34,15 @@ io.on('connection',(socket)=>{
 
     socket.on('chat message',(msg)=>{
         console.log(msg);
-        chatroomService.sendMessage(msg);
-        io.emit(`room#${msg['roomId']}`, msg);
+        if(chatroomService.sendMessage(msg)){
+            io.emit(`room#${msg['roomId']}`, msg);
+        }
     });
 
     //msg should contain user, and room number
-    socket.on('enter room',(msg)=>{
-        chatroomService.enterChatroom(msg['roomId'],msg['user']);
-    });
+    // socket.on('enter room',(msg)=>{
+    //     chatroomService.enterChatroom(msg['roomId'],msg['user']);
+    // });
 
 });
 
@@ -50,6 +51,10 @@ io.on('connection',(socket)=>{
 //need an api method that image service will call to send text message.
 
 //create new room
+/**
+ * Create a new room
+ * body format: {name: #}
+ */
 app.post('/chatroom',(req,res)=>{
     console.log('Recieved request to create chatroom');
     const body = req.body;
@@ -63,10 +68,29 @@ app.delete('/chatroom',(req,res)=>{
     console.log('Recieved request to delete chatroom');
     const body = req.body;
     console.log(`Body: ${body}`);
-    chatroomService.deleteChatroom(body['roomId']);
-    res.status(200).end();
+    if(chatroomService.deleteChatroom(body['roomId'])){
+        res.status(200).end();
+    }
+    else res.status(409).end();
 });
 
+app.get('/chatroom',(req,res)=>{
+    const allRooms = chatroomService.getAllChatrooms();
+    console.log(`In chatroom API: ${allRooms}`);
+    res.status(200).send(allRooms);
+});
+
+/**
+ * body format: {roomId: #, user: {id: #}}
+ */
+app.put('/chatroom',(req,res)=>{
+    console.log('Recieved request to add user to chatroom');
+    const body = req.body;
+    if(chatroomService.enterChatroom(body['roomId'], body['user'])){
+        res.status(200).end();
+    }
+    else res.status(409).end();
+})
 
 app.get('/',(req,res)=>{
     res.send('Hello World');
