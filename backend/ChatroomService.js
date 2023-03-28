@@ -10,23 +10,48 @@ class ChatroomService{
         this.#chatRoomDAO = new ChatroomCacheDAO();
     }
 
-    enterChatroom(room_id, user){
-        const chatroom = this.#chatRoomDAO.getChatroom(room_id);
-        chatroom.addUser(user);
+    /**
+     * Lets a user with a unique username enter the chatroom
+     * @param {*} roomId 
+     * @param {*} user 
+     * @returns 
+     */
+    enterChatroom(roomId, user){
+        let chatroom = this.#chatRoomDAO.getChatroom(roomId);
+        if(chatroom){
+            return chatroom.addUser(user);
+        }
+        else return false;
     };
 
-    exitChatroom(room_id, user){
-        const chatroom = this.#chatRoomDAO.getChatroom(room_id);
-        chatroom.deleteUser(user);
+    exitChatroom(roomId, user){
+        let chatroom = this.#chatRoomDAO.getChatroom(roomId);
+        if(chatroom){
+            return chatroom.deleteUser(user);
+        }
+        else return false;
     };
 
+    /**
+     * 
+     * @param {*} message should follow the format {roomId : #, text: #}
+     * @returns true if message added to chatroom successfully, else false
+     */
     sendMessage(message){
-        const chatroom = this.#chatRoomDAO.getChatroom(message['roomId']);
-        
+        let chatroom = this.#chatRoomDAO.getChatroom(Number(message['roomId']));
+        if(!chatroom){
+            return false;
+        }
         console.log('Adding message to chatroom');
         chatroom.addMessage(message);
+        return true;
     };
 
+    /**
+     * 
+     * @param {*} name name of chatroom to be created
+     * @returns id of created chatroom
+     */
     createChatroom(name){
         let cm = new Chatroom(this.#currentId++, name);
         this.#chatRoomDAO.createChatroom(cm)
@@ -34,8 +59,8 @@ class ChatroomService{
         return cm.id;
     };
 
-    deleteChatroom(room_id){
-        this.#chatRoomDAO.deleteChatroom(room_id);
+    deleteChatroom(roomId){
+        return this.#chatRoomDAO.deleteChatroom(roomId);
     };
 }
 
