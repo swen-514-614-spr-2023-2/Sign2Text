@@ -20,6 +20,17 @@ const Als = () => {
     const webcamDimensionsRef = useRef(null);
     const webcamRef = useRef<Webcam>(null);
 
+    function dataURItoBlob(dataURI: string) {
+        const byteString = atob(dataURI.split(",")[1]);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: "image/png" });
+    }
+
+
     const capture = useCallback(async () => {
         const imageSrc = webcamRef.current?.getScreenshot();
 
@@ -28,13 +39,14 @@ const Als = () => {
             setImage(imageSrc);
 
             try {
+                const formData = new FormData();
+                formData.append("image", dataURItoBlob(imageSrc));
+
                 const response = await fetch("http://localhost:5000/upload-image", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ imageSrc }),
+                    body: formData,
                 });
+
                 const data = await response.json();
                 console.log(data);
             } catch (error) {
@@ -44,12 +56,12 @@ const Als = () => {
     }, [webcamRef]);
 
 
-    // const socket = io("http://localhost:5000");
-    // useEffect(() => {
-    //     socket.on("message", (message) => {
-    //         setMessages((messages) => [...messages, message]);
-    //     });
-    // }, []);
+    const socket = io("http://localhost:5000");
+    useEffect(() => {
+        socket.on("message", (message) => {
+            setMessages((messages) => [...messages, message]);
+        });
+    }, []);
     const handleResize = () => {
         setDimensions({
             width: window.innerWidth / 1.6,
@@ -96,13 +108,14 @@ const Als = () => {
                                         <ListItem>askdjlksadjlkas </ListItem>
                                         <ListItem>askdjlksadjlkas </ListItem>
                                         <ListItem>askdjlksadjlkas </ListItem>
+
                                     </List>
                                 </Box>
 
-                                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                                {/* <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                                     <TextField id="outlined-basic" label="Message" sx={{ alignSelf: "end", padding: "2%", width: "80%" }} variant="outlined" />
-                                    <Button variant="contained" sx={{ alignItems: "center", alignSelf: "end" }}>send</Button>
-                                </Box>
+                                    <Button variant="contained" sx={{ alignItems: "center", alignSelf: "end", marginBottom: "4%", marginRight: "1%" }}>send</Button>
+                                </Box> */}
                             </Box>
                         </Paper>
                     </Grid>
