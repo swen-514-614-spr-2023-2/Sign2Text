@@ -39,11 +39,6 @@ io.on('connection',(socket)=>{
         }
     });
 
-    //msg should contain user, and room number
-    // socket.on('enter room',(msg)=>{
-    //     chatroomService.enterChatroom(msg['roomId'],msg['user']);
-    // });
-
 });
 
 
