@@ -9,7 +9,7 @@ const Camera = () => {
   const [resizedImage, setResizedImage] = useState(null);
 
   const webcamRef = React.useRef(null);
-  const socket = io("http://localhost:5000");
+  const socket = io("http://sign2text.duckdns.org:5000");
 
   useEffect(() => {
     socket.on("message", (message) => {
@@ -49,7 +49,7 @@ const Camera = () => {
           const formData = new FormData();
           formData.append("image", blob, "image.jpg");
           axios
-            .post("http://localhost:5000/upload-image", formData)
+            .post("http://sign2text.duckdns.org:5000/upload-image", formData)
             .then((response) => {
               console.log(response);
             })
