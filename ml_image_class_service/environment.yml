@@ -2,9 +2,9 @@ name: backendtf
 channels:
   - defaults
 dependencies:
-  - python=3.9.16
-  - tensorflow==2.10.0
-  - opencv=4.5.5
+  - python
+  - tensorflow
+  - opencv
   - flask
   - flask-socketio
   - flask-cors
