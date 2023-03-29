@@ -105,9 +105,6 @@ const Als = () => {
                                         {messages.map((message, index) => (
                                             <ListItem key={index}>{message}</ListItem>
                                         ))}
-                                        <ListItem>askdjlksadjlkas </ListItem>
-                                        <ListItem>askdjlksadjlkas </ListItem>
-                                        <ListItem>askdjlksadjlkas </ListItem>
 
                                     </List>
                                 </Box>
