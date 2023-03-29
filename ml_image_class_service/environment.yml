@@ -1,0 +1,12 @@
+name: backendtf
+channels:
+  - defaults
+dependencies:
+  - python
+  - tensorflow
+  - opencv
+  - flask
+  - flask-socketio
+  - flask-cors
+  - matplotlib
+  - eventlet
