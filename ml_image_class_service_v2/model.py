@@ -2,9 +2,10 @@ import cv2
 import numpy as np
 import math
 import time
-from keras.models import load_model
+import tensorflow as tf
 
-model = load_model("Model/keras_Model.h5", compile=False)
+
+model = tf.keras.models.load_model("Model/keras_model.h5")
 
 class_names = open("Model/labels.txt", "r").readlines()
 
@@ -59,6 +60,6 @@ def getPrediction(file):
         prediction = model.predict(imgWhite)
         index = np.argmax(prediction)
         class_name = class_names[index]
-        return str(class_name)
+        return "asl user says : "+str(class_name.split(" ")[1])
     else:
-        return "no hand"
+        return "no hand detected"

@@ -32,4 +32,4 @@ def upload_image():
 
 if __name__ == '__main__':
     # socketio.start_background_task(send_random_message)
-    socketio.run(app, debug=True)
+    socketio.run(app,host="0.0.0.0", debug=True)
