@@ -1,4 +1,4 @@
-import model
+# import model
 from datetime import datetime
 import time
 import random
@@ -25,7 +25,8 @@ def upload_image():
     # filename = datetime.now().strftime("%Y-%m-%d-%H-%M-%S-%f") + "-" + \
     #     str(random.randint(100000, 999999)) + ".jpg"
     # file.save(filename)
-    socketio.emit('message', model.getPrediction(file))
+    # socketio.emit('message', model.getPrediction(file))
+    socketio.emit('message', "predicted")
     return 'Image uploaded successfully', 200
 
 
