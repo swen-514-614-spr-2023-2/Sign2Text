@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button type="button" id="create">Create room</button>
+    <div>
+        <form id="form" action="">
+            Type here: <input id="textInput" type="text">
+            <button type="submit" id="sendbutton">Send</button>
+        </form>
+
+    </div>
+
+    <div>
+        <ul id="messages"></ul>
+    </div>
+
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
+    <script>
+        var messageInput = document.getElementById('textInput');
+        var messages = document.getElementById('messages');
+        const url = "http://localhost:3000";
+        var socket = io(url); //can add url here of backend server
+    
+
+        let button = document.getElementById('create');
+        button.addEventListener('click',()=>{
+            fetch(`${url}/chatroom`,{
+                method : "POST",
+                headers : {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body : JSON.stringify({name : "haha"})
+            }).then(res => res.json())
+              .then(res => console.log(JSON.stringify(res))).catch(err => console.log(err));
+        });
+
+        let form = document.getElementById('form');
+        form.addEventListener('submit',(e)=>{
+            e.preventDefault();
+            if(messageInput.value){
+                socket.emit('chat message',{roomId : 0, text : messageInput.value});
+                messageInput.value = '';
+            }
+        });
+
+        socket.on('room#0',(msg)=>{
+            var item = document.createElement('li');
+            item.textContent = msg['text'];
+            messages.appendChild(item);
+            window.scrollTo(document.body.scrollHeight);
+        });
+    </script>
+</body>
+</html>
