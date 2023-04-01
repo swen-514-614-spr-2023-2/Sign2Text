@@ -57,7 +57,7 @@ const Als = () => {
 
 
     const socket = io("http://localhost:5000");
-    useEffect(() => {
+    useState(() => {
         socket.on("message", (message) => {
             setMessages((messages) => [...messages, message]);
         });
@@ -97,10 +97,10 @@ const Als = () => {
                     </Grid>
 
                     <Grid item xs={4} >
-                        <Paper elevation={8} sx={{ minHeight: window.innerHeight / 1.6 }} >
+                        <Paper elevation={8} sx={{ position: "relative", minHeight: window.innerHeight / 1.6 }} >
                             <Typography variant="h2" padding={"4%"} textAlign="center">Chat</Typography>
                             <Box display="flex" flexDirection="column" justifyContent="space-between" sx={{ height: "100%" }}>
-                                <Box>
+                                <Box sx={{height:window.innerHeight / 2.8,overflowY:"scroll"}}>
                                     <List >
                                         {messages.map((message, index) => (
                                             <ListItem key={index}>{message}</ListItem>
@@ -109,10 +109,23 @@ const Als = () => {
                                     </List>
                                 </Box>
 
-                                {/* <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                                    <TextField id="outlined-basic" label="Message" sx={{ alignSelf: "end", padding: "2%", width: "80%" }} variant="outlined" />
-                                    <Button variant="contained" sx={{ alignItems: "center", alignSelf: "end", marginBottom: "4%", marginRight: "1%" }}>send</Button>
-                                </Box> */}
+                                <Box sx={{ position: "absolute", bottom: 0, width: "100%" }}>
+                                    <Grid direction="row"
+                                        justifyContent="center"
+                                        alignItems="stretch" container spacing={2}>
+                                        <Grid item xs={9} sx={{}} >
+                                            <TextField id="outlined-basic" label="Message" sx={{ padding: "2%", width: "98%" }} variant="outlined" />
+                                        </Grid>
+                                        <Grid item xs={3} sx={{
+                                            display: "flex", justifyContent: "center",
+                                            flexWrap: "nowrap",
+                                            alignItems: "center",
+                                            paddingLeft: "0px"
+                                        }}>
+                                            <Button variant="contained" sx={{ width: "80%", height: "80%", }}>send</Button>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
                             </Box>
                         </Paper>
                     </Grid>
