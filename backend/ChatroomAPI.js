@@ -78,7 +78,7 @@ app.get('/chatroom',(req,res)=>{
 /**
  * body format: {roomId: #, user: {id: #}}
  */
-app.put('/chatroom',(req,res)=>{
+app.put('/chatroom/users',(req,res)=>{
     console.log('Recieved request to add user to chatroom');
     const body = req.body;
     if(chatroomService.enterChatroom(body['roomId'], body['user'])){
