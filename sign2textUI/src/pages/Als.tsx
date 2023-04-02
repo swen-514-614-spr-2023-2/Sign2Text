@@ -3,6 +3,7 @@ import Webcam from "react-webcam";
 import { useRef, useState, useCallback, useEffect, } from "react";
 import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
+import Chatbox from "../components/Chatbox";
 
 
 const Als = () => {
@@ -102,37 +103,11 @@ const Als = () => {
                     </Grid>
 
                     <Grid item xs={4} >
-                        <Paper elevation={8} sx={{ position: "relative", minHeight: window.innerHeight / 1.6 }} >
-                            <Typography variant="h2" padding={"4%"} textAlign="center">Chat - Room #{roomid}</Typography>
-                            <Box display="flex" flexDirection="column" justifyContent="space-between" sx={{ height: "100%" }}>
-                                <Box sx={{height:window.innerHeight / 2.8,overflowY:"scroll"}}>
-                                    <List >
-                                        {messages.map((message, index) => (
-                                            <ListItem key={index}>{message}</ListItem>
-                                        ))}
-
-                                    </List>
-                                </Box>
-
-                                <Box sx={{ position: "absolute", bottom: 0, width: "100%" }}>
-                                    <Grid direction="row"
-                                        justifyContent="center"
-                                        alignItems="stretch" container spacing={2}>
-                                        <Grid item xs={9} sx={{}} >
-                                            <TextField id="outlined-basic" label="Message" sx={{ padding: "2%", width: "98%" }} variant="outlined" />
-                                        </Grid>
-                                        <Grid item xs={3} sx={{
-                                            display: "flex", justifyContent: "center",
-                                            flexWrap: "nowrap",
-                                            alignItems: "center",
-                                            paddingLeft: "0px"
-                                        }}>
-                                            <Button variant="contained" sx={{ width: "80%", height: "80%", }}>send</Button>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                            </Box>
-                        </Paper>
+                        <Chatbox 
+                        height={window.innerHeight / 1.6 } 
+                        roomid={roomid}
+                        messages={messages}
+                        ></Chatbox>
                     </Grid>
 
 

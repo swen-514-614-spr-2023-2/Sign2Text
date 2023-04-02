@@ -103,7 +103,7 @@ export default function Rooms() {
                       </ListItemIcon>
                       <ListItemText primary="Create a room" >
                     </ListItemText>
-                  </ListItemButton>``
+                  </ListItemButton>
                 </StyledLink>
               </ListItem>
 

@@ -14,9 +14,10 @@ import { StyledLink, themeTut } from "../utils/styles";
 
 const userTypes = ['ALS', 'Non-ALS'];
 
-export interface SimpleDialogProps {
+interface SimpleDialogProps {
   open: boolean;
   roomid: number;
+
   onClose: () => void;
 }
 
@@ -35,9 +36,9 @@ function SimpleDialog(props: SimpleDialogProps) {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Select User Type</DialogTitle>
       <List sx={{ pt: 0 }}>
-        {userTypes.map((type) => (
+        {userTypes.map((type,index) => (
           <ListItem disableGutters>
-            <StyledLink to={"/AlsView/" + roomid}>
+            <StyledLink to={`/${!index ? "AlsView":"NonAlsView"}/${roomid}`}>
               <ListItemButton onClick={() => handleListItemClick()} key={type}>
                 <ListItemText primary={type} />
               </ListItemButton>
