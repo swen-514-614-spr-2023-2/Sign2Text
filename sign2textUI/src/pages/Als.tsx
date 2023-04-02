@@ -1,16 +1,19 @@
 import { Box, Button, Container, Grid, List, ListItem, Paper, TextField, Typography } from "@mui/material";
 import Webcam from "react-webcam";
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect, } from "react";
 import { io } from "socket.io-client";
+import { useParams } from "react-router-dom";
 
 
 const Als = () => {
+
     const videoConstraints = {
         width: 400,
         height: 400,
         facingMode: "user"
     };
 
+    const {roomid} = useParams()
 
     const [messages, setMessages] = useState<string[] | []>([]);
     const [image, setImage] = useState<string | null>(null);
@@ -61,7 +64,9 @@ const Als = () => {
         socket.on("message", (message) => {
             setMessages((messages) => [...messages, message]);
         });
-    }, []);
+    });
+
+
     const handleResize = () => {
         setDimensions({
             width: window.innerWidth / 1.6,
@@ -98,7 +103,7 @@ const Als = () => {
 
                     <Grid item xs={4} >
                         <Paper elevation={8} sx={{ position: "relative", minHeight: window.innerHeight / 1.6 }} >
-                            <Typography variant="h2" padding={"4%"} textAlign="center">Chat</Typography>
+                            <Typography variant="h2" padding={"4%"} textAlign="center">Chat - Room #{roomid}</Typography>
                             <Box display="flex" flexDirection="column" justifyContent="space-between" sx={{ height: "100%" }}>
                                 <Box sx={{height:window.innerHeight / 2.8,overflowY:"scroll"}}>
                                     <List >

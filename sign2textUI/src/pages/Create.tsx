@@ -1,7 +1,7 @@
 const Create = () => {
     return ( 
     <div className="Create">
-
+        
     </div> );
 }
  

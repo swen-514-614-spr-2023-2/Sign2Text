@@ -1,15 +1,63 @@
 import { Paper, Typography, Box, ListItemButton, ListItemText, List, ListItem, ListItemIcon } from "@mui/material"
 import { Container } from '@mui/material';
-
+import SimpleDialog from "../components/SimpleDialog";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { StyledLink, themeTut } from "../utils/styles";
 import HubIcon from '@mui/icons-material/Hub';
 import AddIcon from '@mui/icons-material/Add';
+import { useEffect, useState } from "react";
 
-
+interface Room {
+  roomId: number;
+  name: string;
+}
 export default function Rooms() {
+
+  const userTypes = ['ALS', 'Non-ALS'];
+  const [rooms, setrooms] = useState<Room[]>([])
+  const [isloading, setisloading] = useState(true)
+
+  const [open, setOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [roomID, setroomID] = useState<number>("")
+
+  const handleClickOpen = (roomid: number) => {
+
+    setOpen(true);
+    setroomID(roomid)
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+
+  };
+
+
+  useEffect(() => {
+    const response = fetch("http://localhost:3000/chatroom", {})
+      .then(response => {
+        // if (!response.ok) {
+        //   throw new Error("could not fetch")
+        // }
+        return response.json()
+      })
+      .then(data => {
+        setrooms(data)
+        setisloading(false)
+      })
+      .catch(error => {
+        setisloading(false)
+        console.error(error)
+      })
+
+
+  }, [])
+
+
   return (
+
     <div className="Rooms">
+
       <Container maxWidth='sm'>
         <ThemeProvider theme={themeTut}>
           <Box marginTop={"20%"} >
@@ -20,41 +68,58 @@ export default function Rooms() {
                 </Typography>
               </Box>
               <List sx={{ display: "relative", marginX: "auto" }} >
+
+                {isloading &&
+
+                  <ListItem>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <HubIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Loading rooms..." />
+                    </ListItemButton>
+                  </ListItem>
+                }
+
+                {!isloading && rooms.map((room) => {
+                  return (
+
+                    <ListItem key={room.roomId}>
+                      <ListItemButton onClick={() => handleClickOpen(room.roomId)}>
+                        <ListItemIcon>
+                          <HubIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Room " + room.name} />
+                      </ListItemButton>
+                    </ListItem>)
+
+                })
+                }
                 <ListItem >
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <HubIcon />
-                    </ListItemIcon>
-                    <StyledLink to="/AlsView/1">
-                      <ListItemText primary="Room 1" />
-                    </StyledLink>
-                  </ListItemButton>
-                </ListItem>
-                <ListItem >
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <HubIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Room 2" />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem >
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <AddIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Create a room" >
+                  <StyledLink to={"/createRoom"}>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <AddIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Create a room" >
                     </ListItemText>
-                  </ListItemButton>
-                </ListItem>
-              </List>
-            </Paper>
+                  </ListItemButton>``
+                </StyledLink>
+              </ListItem>
 
-          </Box>
-        </ThemeProvider>
-      </Container>
+            </List>
+            <SimpleDialog
+              open={open}
+              onClose={() => setOpen(false)}
+              roomid={roomID}
+            />
+          </Paper>
+
+        </Box>
+      </ThemeProvider>
+    </Container>
 
 
-    </div>
+    </div >
   )
 }
