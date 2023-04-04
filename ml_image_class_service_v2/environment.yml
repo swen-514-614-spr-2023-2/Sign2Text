@@ -1,4 +1,4 @@
-name: sign2text_bknd_test
+name: s2tpy
 channels:
   - defaults
 dependencies:

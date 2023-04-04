@@ -28,7 +28,6 @@
         const url = "http://localhost:3000";
         var socket = io(url); //can add url here of backend server
     
-
         let button = document.getElementById('create');
         button.addEventListener('click',()=>{
             fetch(`${url}/chatroom`,{

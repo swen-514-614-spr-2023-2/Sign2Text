@@ -21,7 +21,6 @@ const Als = () => {
     const [url, setUrl] = useState<string | null>(null);
     const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 750, height: 750 });
 
-    const webcamDimensionsRef = useRef(null);
     const webcamRef = useRef<Webcam>(null);
 
     function dataURItoBlob(dataURI: string) {
@@ -45,6 +44,7 @@ const Als = () => {
             try {
                 const formData = new FormData();
                 formData.append("image", dataURItoBlob(imageSrc));
+                formData.append("roomId", roomid+"");
 
                 const response = await fetch("http://localhost:5000/upload-image", {
                     method: "POST",
@@ -61,11 +61,18 @@ const Als = () => {
 
 
     const socket = io("http://localhost:5000");
-    useState(() => {
+
+    useEffect(() => {
         socket.on("message", (message) => {
             setMessages((messages) => [...messages, message]);
         });
-    });
+    }, [messages])
+    
+    // useState(() => {
+    //     socket.on("message", (message) => {
+    //         setMessages((messages) => [...messages, message]);
+    //     });
+    // });
 
 
     const handleResize = () => {

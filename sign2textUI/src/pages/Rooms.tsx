@@ -13,16 +13,14 @@ interface Room {
 }
 export default function Rooms() {
 
-  const userTypes = ['ALS', 'Non-ALS'];
   const [rooms, setrooms] = useState<Room[]>([])
   const [isloading, setisloading] = useState(true)
 
   const [open, setOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-  const [roomID, setroomID] = useState<number>("")
+  const [roomID, setroomID] = useState<number>(0)
 
   const handleClickOpen = (roomid: number) => {
-
     setOpen(true);
     setroomID(roomid)
   };
