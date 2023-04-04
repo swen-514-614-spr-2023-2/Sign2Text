@@ -18,13 +18,13 @@ app.config['SECRET_KEY'] = 'secret!'
 
 @app.route('/upload-image', methods=['POST'])
 def upload_image():
-    if 'image' not in request.form:
+    if 'image' not in request.files:
         return 'No image provided', 400
-    room_ = request.form['roomid']
-    file_ = request.form['image']
+    room_ = request.form['roomId']
+    file_ = request.files['image']
 
     url = 'http://localhost:3000/prediction'  # replace with the URL of the other service's API endpoint
-    data = {'text': model.getPrediction(file_), 'roomid': room_}  # replace with the data you want to send in the request
+    data = {'text': model.getPrediction(file_), 'roomId': room_}  # replace with the data you want to send in the request
 
     response = requests.post(url, json=data)
 
