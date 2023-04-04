@@ -40,8 +40,8 @@ app.post("/prediction", (req, res) => {
   console.log("Recieved new prediction");
   const body = req.body;
   console.log(body);
-  const pred = chatroomService.sendMessage(body);
-  res.status(200).send(body);
+  io.emit(`room#${body["roomId"]}`, body);
+  // res.status(200).send(body);
 });
 
 //create new room
