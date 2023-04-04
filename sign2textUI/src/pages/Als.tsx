@@ -16,7 +16,7 @@ const Als = () => {
 
     const {roomid} = useParams()
 
-    const [messages, setMessages] = useState<string[] | []>([]);
+    // const [messages, setMessages] = useState<string[] | []>([]);
     const [image, setImage] = useState<string | null>(null);
     const [url, setUrl] = useState<string | null>(null);
     const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 750, height: 750 });
@@ -60,13 +60,13 @@ const Als = () => {
     }, [webcamRef]);
 
 
-    const socket = io("http://localhost:5000");
+    // const socket = io("http://localhost:5000");
 
-    useEffect(() => {
-        socket.on("message", (message) => {
-            setMessages((messages) => [...messages, message]);
-        });
-    }, [messages])
+    // useEffect(() => {
+    //     socket.on("message", (message) => {
+    //         setMessages((messages) => [...messages, message]);
+    //     });
+    // }, [messages])
     
     // useState(() => {
     //     socket.on("message", (message) => {
@@ -113,7 +113,7 @@ const Als = () => {
                         <Chatbox 
                         height={window.innerHeight / 1.6 } 
                         roomid={roomid}
-                        messages={messages}
+                        // messages={messages}
                         ></Chatbox>
                     </Grid>
 

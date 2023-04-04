@@ -3,12 +3,11 @@ import { socket } from '../utils/socket';
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 interface ChatboxProps {
-    messages: string[]
     roomid: string | undefined
     height: number
 }
 
-const Chatbox = ({ messages, roomid, height }: ChatboxProps) => {
+const Chatbox = ({  roomid, height }: ChatboxProps) => {
     const [isConnected, setIsConnected] = useState(socket.connected);
     //   const [fooEvents, setFooEvents] = useState([]);
     const [value, setValue] = useState('');
@@ -36,12 +35,12 @@ const Chatbox = ({ messages, roomid, height }: ChatboxProps) => {
         }
 
         socket.on("room#"+roomid, (Emessaage) => {
-            const combinedMessages = [...messages, ...Emessaages];
+            // const combinedMessages = [...messages, ...Emessaages];
             
             
-            setEmessaages(() => [...combinedMessages, Emessaage.text]);
+            setEmessaages(() => [...Emessaages, Emessaage.text]);
         });
-        console.log("mes",messages);
+        // console.log("mes",messages);
         console.log("Emes",Emessaages);
 
         // function onFooEvent(message: string) {
