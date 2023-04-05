@@ -49,7 +49,7 @@ const Create = () => {
             value={chatroomName}
             onChange={(e) => setChatroomName(e.target.value)}
             required
-            style={{ display: "block", margin: "1rem" }}
+            style={{width: "100%"}}
           />
 
           <TextField
@@ -61,20 +61,16 @@ const Create = () => {
             inputProps={{ min: 1, max: 100 }}
             error={Boolean(maxMembersError)}
             helperText={maxMembersError}
+            style={{ width: "100%" }}
             InputLabelProps={{
               shrink: true,
             }}
-            style={{ display: "block", margin: "1rem auto" }}
+            
           />
           
-          <Button
-            color="primary"
-            disabled={false}
-            size="medium"
-            variant="contained">
-            Create Chatroom
-          </Button>
-
+        <Button type="submit" variant="contained" color="primary" style={{ display: "block", margin: "1rem auto" }}>
+          Create Chatroom
+        </Button>
         </form>
 
 
