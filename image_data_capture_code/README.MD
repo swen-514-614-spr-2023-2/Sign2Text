@@ -5,9 +5,10 @@ procedure to create a conda environemnt:
 `conda env create -f environment_hand_data_capture.yml`
 `conda activate hand_capture`
 
-How to run he code:
+How to run the code:
 
 1.  In the create_data.py change the `folder = "Data/<capture symbol character>"` to the Character for which you are intending to capture images. (choose characters where there is no data in the Data folder)
+    NOTE: create a folder for the alphabet in the path specified above before proceeding to next step
 
 2.  save and Run `python create_data.py` through terminal.
 
@@ -19,6 +20,6 @@ How to run he code:
 5.  once ready press `s` on keyboard to save the hand corped and marked to folder. repeat this to capture multiple images with different hand orientations and backgrounds, try to swith hands left/right.
     ![alt text](./doc_images/corped_capture.png)
 
-6.  once you capture around 35 images. repear from step 1 to 6 to capture a different character.
+6.  once you capture around 35 images. repeat from step 1 to 6 to capture a different character.
 
 this code is just to capture around 35 images of marked hands for each character, this data will be used to train a model. and only the final model will be deployed in ML service.
