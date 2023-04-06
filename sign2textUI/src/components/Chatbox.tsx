@@ -1,7 +1,6 @@
 import { Box, Button, Grid, List, ListItem, Paper, TextField, Typography } from "@mui/material";
 import { socket } from '../utils/socket';
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { io } from "socket.io-client";
 interface ChatboxProps {
     roomid: string | undefined
     height: number
@@ -18,7 +17,7 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
         event.preventDefault();
         setIsLoading(true);
 
-        socket.timeout(5000).emit('chat message', {roomId : roomid, text : value.toString()}, () => {
+        socket.timeout(5000).emit('chat message', {roomId : roomid, text : value.toString(),user:{id:0}}, () => {
             setIsLoading(false);
         });
 
@@ -35,9 +34,6 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
         }
 
         socket.on("room#"+roomid, (Emessaage) => {
-            // const combinedMessages = [...messages, ...Emessaages];
-            
-            
             setEmessaages(() => [...Emessaages, Emessaage.text]);
         });
         // console.log("mes",messages);
@@ -76,7 +72,6 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
 
                     <Box sx={{ position: "absolute", bottom: 0, width: "100%" }}>
                     <form onSubmit={onSend}>
-
                         <Grid direction="row"
                             justifyContent="center"
                             alignItems="stretch" container spacing={2}>
@@ -92,10 +87,9 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
                                     paddingLeft: "0px"
                                 }}>
                                     <Button type="submit"  variant="contained" sx={{ width: "80%", height: "80%", }}>send</Button>
-
                                 </Grid>
                         </Grid>
-                        </form>
+                    </form>
 
                     </Box>
                 </Box>

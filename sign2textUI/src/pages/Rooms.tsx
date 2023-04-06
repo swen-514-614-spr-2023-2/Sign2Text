@@ -1,7 +1,7 @@
 import { Paper, Typography, Box, ListItemButton, ListItemText, List, ListItem, ListItemIcon } from "@mui/material"
 import { Container } from '@mui/material';
 import SimpleDialog from "../components/SimpleDialog";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider, } from '@mui/material/styles';
 import { StyledLink, themeTut } from "../utils/styles";
 import HubIcon from '@mui/icons-material/Hub';
 import AddIcon from '@mui/icons-material/Add';
@@ -93,29 +93,31 @@ export default function Rooms() {
 
                 })
                 }
-                <ListItem >
-                  <StyledLink to={"/createRoom"}>
+                <StyledLink to={"/createRoom"}>
+
+                  <ListItem >
                     <ListItemButton>
                       <ListItemIcon>
                         <AddIcon />
                       </ListItemIcon>
                       <ListItemText primary="Create a room" >
-                    </ListItemText>
-                  </ListItemButton>
+                      </ListItemText>
+                    </ListItemButton>
+
+                  </ListItem>
                 </StyledLink>
-              </ListItem>
 
-            </List>
-            <SimpleDialog
-              open={open}
-              onClose={() => setOpen(false)}
-              roomid={roomID}
-            />
-          </Paper>
+              </List>
+              <SimpleDialog
+                open={open}
+                onClose={() => setOpen(false)}
+                roomid={roomID}
+              />
+            </Paper>
 
-        </Box>
-      </ThemeProvider>
-    </Container>
+          </Box>
+        </ThemeProvider>
+      </Container>
 
 
     </div >

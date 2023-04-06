@@ -17,16 +17,18 @@ export const themeTut = createTheme({
             props: {
               variant: "h3"
             },style:{
-              fontSize:40
+              fontSize:40,
+              paddingtop:"10px"
             }
   
           },
         ]
-      }
+      },
+      
     },
     palette: {
-      primary: {
-        main: red["A100"],
+      background: {
+        default: '#e6e9ec',
       },
     },
   });
