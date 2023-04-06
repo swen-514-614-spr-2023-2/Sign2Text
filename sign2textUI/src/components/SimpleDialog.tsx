@@ -8,7 +8,7 @@ import Dialog from '@mui/material/Dialog';
 import { StyledLink } from "../utils/styles";
 import { Box, Button, TextField } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
-
+import { redirect } from "react-router-dom";
 
 const userTypes = ['ASL', 'Non-ASL'];
 
@@ -42,8 +42,12 @@ function SimpleDialog(props: SimpleDialogProps) {
     });
   }
 
-  const handleButt =()=>{
-    console.log('handleButt');
+  const handleButt =(type:string)=>{
+    if(type === 'ASL'){
+      return redirect("/AlsView/"+roomid);
+    }else{
+      return redirect("/NonAlsView/"+roomid);
+    }
   }
   const handleClose = () => {
     onClose();
@@ -58,12 +62,12 @@ function SimpleDialog(props: SimpleDialogProps) {
       <DialogTitle>Select User Type</DialogTitle>
       <List sx={{ pt: 0 }}>
         {userTypes.map((type, index) => (
-          <ListItem disableGutters>
+          <ListItem disableGutters key={index}>
             {/* <StyledLink to={`/${!index ? "AlsView":"NonAlsView"}/${roomid}`}> */}
               <ListItemText  sx={{ textAlign:"center",marginX:"1%"}} primary={type} />
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <TextField sx={{ flexGrow: 1 }} onChange={(e) => (handleTextfield(e,index))} id="filled-basic" label="Enter username" variant="filled" />
-              <Button sx={{ flexShrink: 0,height:"100%",marginX:"2%"}} variant="contained" onClick={handleButt} disabled={isDisabled(index)}>Go</Button>
+              <Button sx={{ flexShrink: 0,height:"100%",marginX:"2%"}} variant="contained" onClick={()=>handleButt(type)} disabled={isDisabled(index)}>Go</Button>
             </Box>
             {/* </StyledLink> */}
           </ListItem>
