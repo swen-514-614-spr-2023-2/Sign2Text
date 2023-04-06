@@ -1,4 +1,5 @@
-import Box from "@mui/material/Box";
+import { Paper } from "@mui/material";
+// import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
@@ -11,7 +12,18 @@ const Create = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Submit the form data to create the chatroom
+    const response = fetch(`https://localhost:3000/chatroom`, {
+      method: "POST",
+      body: JSON.stringify({ name: chatroomName}),
+
+    }).then((res) => {
+      console.log(res)
+      console.log(res.type)
+    })
+    .catch((error) => {
+      console.log(error)
+      console.log(error.type)
+    });
   };
 
   const handleMaxMembersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,8 +41,16 @@ const Create = () => {
   const [maxMembersError, setMaxMembersError] = useState("");
 
 
+  
+
+  /** Usage returns typed data */
+  
+
+
+
+
   return (
-    <Box
+    <Paper
       component="form"
       sx={{
         '& .MuiTextField-root': { m: 1, width: '25ch' },
@@ -45,7 +65,6 @@ const Create = () => {
           <TextField
             label="Chatroom Name"
             id="outlined-required"
-            defaultValue="Hello World"
             value={chatroomName}
             onChange={(e) => setChatroomName(e.target.value)}
             required
@@ -68,14 +87,14 @@ const Create = () => {
             
           />
           
-        <Button type="submit" variant="contained" color="primary" style={{ display: "block", margin: "1rem auto" }}>
+        <Button type="submit" variant="contained" color="primary" style={{ display: "block", margin: "1rem auto" }} >
           Create Chatroom
         </Button>
         </form>
 
 
       </div>
-    </Box>);
+    </Paper>);
 }
 
 export default Create;
