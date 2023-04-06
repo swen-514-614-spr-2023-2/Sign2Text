@@ -17,16 +17,17 @@ const Create = () => {
     e.preventDefault();
     const response = fetch(`http://localhost:3000/chatroom`, {
       method: "POST",
-      body: JSON.stringify({ name: chatroomName }),
+      body: JSON.stringify({ name: chatroomName}),
+      headers:{"Content-Type": "application/json"}
 
     }).then((res) => {
       setSuccessMessage("Chatroom " + chatroomName + " created successfully")
       console.log(res)
     })
-      .catch((error) => {
-        console.log(error)
-        console.log(error.type)
-      });
+    .catch((error) => {
+      setError(true)
+      console.log(error)
+    });
   };
 
   const handleMaxMembersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,9 +42,11 @@ const Create = () => {
     setMaxMembers(value);
   };
 
-  
   return (
     <Paper
+      sx={{
+        '& .MuiTextField-root': { m: 1, width: '25ch' },
+      }}
     >
       <div className="Create" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 
@@ -55,7 +58,7 @@ const Create = () => {
             value={chatroomName}
             onChange={(e) => setChatroomName(e.target.value)}
             required
-            style={{ width: "100%" }}
+            style={{width: "100%"}}
           />
 
           <TextField
@@ -71,12 +74,12 @@ const Create = () => {
             InputLabelProps={{
               shrink: true,
             }}
-
+            
           />
-
-          <Button type="submit" variant="contained" color="primary" style={{ display: "block", margin: "1rem auto" }} >
-            Create Chatroom
-          </Button>
+          
+        <Button type="submit" variant="contained" color="primary" style={{ display: "block", margin: "1rem auto" }} >
+          Create Chatroom
+        </Button>
         </form>
 
         {/* </div>{error && <div> } */}
