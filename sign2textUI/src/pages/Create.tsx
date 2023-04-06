@@ -7,18 +7,21 @@ import { useState } from "react";
 const Create = () => {
 
   const [chatroomName, setChatroomName] = useState("");
+  const [maxMembersError, setMaxMembersError] = useState("");
   const [chatroomId, setChatroomId] = useState("");
   const [maxMembers, setMaxMembers] = useState(1);
+  const [error, setError] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("") ;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = fetch(`https://localhost:3000/chatroom`, {
+    const response = fetch(`http://localhost:3000/chatroom`, {
       method: "POST",
       body: JSON.stringify({ name: chatroomName }),
 
     }).then((res) => {
+      setSuccessMessage("Chatroom " + chatroomName + " created successfully")
       console.log(res)
-      console.log(res.type)
     })
       .catch((error) => {
         console.log(error)
@@ -38,17 +41,7 @@ const Create = () => {
     setMaxMembers(value);
   };
 
-  const [maxMembersError, setMaxMembersError] = useState("");
-
-
-
-
-  /** Usage returns typed data */
-
-
-
-
-
+  
   return (
     <Paper
     >
@@ -86,6 +79,7 @@ const Create = () => {
           </Button>
         </form>
 
+        {/* </div>{error && <div> } */}
 
       </div>
     </Paper>);
