@@ -2,8 +2,8 @@ how to run:
 
 <!-- npm install react react-dom websocket -->
 
-npm install
-npm start
+* npm install
+* npm start
 
 # Getting Started with Create React App
 
