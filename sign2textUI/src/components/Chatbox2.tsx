@@ -1,61 +1,78 @@
 import { Box, Button, Grid, List, ListItem, Paper, TextField, Typography } from "@mui/material";
 import { socket } from '../utils/socket';
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { Kafka, EachMessagePayload  } from 'kafkajs';
+
+
 interface ChatboxProps {
     roomid: string | undefined
     height: number
 }
-
-const Chatbox = ({  roomid, height }: ChatboxProps) => {
+type Message = {
+    value: string;
+  }
+const Chatbox2 = ({  roomid, height }: ChatboxProps) => {
+    const kafka = new Kafka({
+        clientId: 'my-app',
+        brokers: ['localhost:9092']
+      });
     const [isConnected, setIsConnected] = useState(socket.connected);
     //   const [fooEvents, setFooEvents] = useState([]);
     const [value, setValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [Emessaages, setEmessaages] = useState<string[] | []>([])
-    
+    const [messages, setMessages] = useState<Message[]>([]);
     function onSend(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        setIsLoading(true);
-
-        socket.timeout(5000).emit('chat message', {roomId : roomid, text : value.toString(),user:{id:0}}, () => {
-            setIsLoading(false);
-            setValue("")
-        });
+        sendMessage(value);
+        console.log("dsdasd");
+        
+        console.log(messages);
+        
+        setValue("")
     }
+
+    const sendMessage = async (message: string) => {
+        const producer = kafka.producer();
+        await producer.connect();
+        await producer.send({
+          topic: 'chat-messages',
+          messages: [
+            { value: message }
+          ]
+        });
+        await producer.disconnect();
+      }
 
 
     useEffect(() => {
-        function onConnect() {
-            setIsConnected(true);
-        }
-
-        function onDisconnect() {
-            setIsConnected(false);
-        }
-
-        socket.on("room#"+roomid, (Emessaage) => {
-            setEmessaages(() => [...Emessaages, Emessaage.text]);
-        });
-        // console.log("mes",messages);
-        console.log("Emes",Emessaages);
-
-        // function onFooEvent(message: string) {
-        //   setFooEvents((prevMessages) => [...prevMessages, message]);
-        // }
-
- 
-        
-        
-        socket.on('connect', onConnect);
-        socket.on('disconnect', onDisconnect);
-        // socket.on('foo', onFooEvent);
-
+        const consumer = kafka.consumer({ groupId: 'my-group' });
+    
+        const run = async () => {
+          await consumer.connect();
+          await consumer.subscribe({ topic: 'chat-messages', fromBeginning: true });
+    
+          const run = async (): Promise<void> => {
+            await consumer.connect();
+            await consumer.subscribe({ topic: 'chat-messages', fromBeginning: true });
+      
+            await consumer.run({
+              eachMessage: async ({ topic, partition, message }: EachMessagePayload): Promise<void> => {
+                console.log({
+                  value: message.value.toString(),
+                });
+                setMessages(prevMessages => [...prevMessages, message.value.toString()]);
+              },
+            });
+          };  }  
+        run().catch(console.error);
+    
         return () => {
-            socket.off('connect', onConnect);
-            socket.off('disconnect', onDisconnect);
-            //   socket.off('foo', onFooEvent);
-        };
-    }, [Emessaages]);
+          consumer.disconnect();
+        }
+    
+      }, []);
+
+
     return (
         <div className="Chatbox">
             <Paper elevation={8} sx={{ position: "relative", minHeight: height }} >
@@ -63,8 +80,8 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
                 <Box display="flex" flexDirection="column" justifyContent="space-between" sx={{ height: "100%" }}>
                     <Box sx={{ height: window.innerHeight / 2.8, overflowY: "scroll" }}>
                         <List >
-                            {Emessaages.map((emessage, index) => (
-                                <ListItem key={index}>{emessage}</ListItem>
+                            {messages.map((message, index) => (
+                                <ListItem key={index}>{message.value}</ListItem>
                             ))}
 
                         </List>
@@ -99,4 +116,4 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
     );
 }
 
-export default Chatbox;
+export default Chatbox2;
