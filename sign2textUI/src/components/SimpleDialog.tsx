@@ -47,9 +47,9 @@ function SimpleDialog(props: SimpleDialogProps) {
     console.log("ksdkjcjsf");
 
     if (type === 'ASL') {
-      navigate("/AlsView/" + "roomid");
+      navigate("/AlsView/" + roomid);
     } else {
-      navigate("/NonAlsView/" + "roomid");
+      navigate("/NonAlsView/" + roomid);
     }
   }
   const handleClose = () => {

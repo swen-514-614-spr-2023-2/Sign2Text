@@ -1,11 +1,19 @@
 const express = require("express");
 const http = require("http");
-const WebSocket = require("ws");
 const { Kafka } = require("kafkajs");
+const socketio = require("socket.io");
+const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+
+const io = socketio(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 const kafka = new Kafka({
   clientId: "my-app",
@@ -16,38 +24,61 @@ const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: "test-consumer-group" });
 
 async function run() {
-  await producer.connect();
-  await consumer.connect();
-  await consumer.subscribe({
-    topic: "quickstart-events5",
-    fromBeginning: true,
-  });
-  await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      console.log(`Received message: ${message.value.toString()}`);
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(message.value.toString());
-        }
+  try {
+    await producer.connect();
+
+    io.on("connection", (socket) => {
+      console.log("Socket.IO connection established");
+
+      socket.on("subscribe", async (topic) => {
+        console.log(`Subscribing to Kafka topic: ${topic}`);
+        await consumer.subscribe({
+          topic: topic,
+          fromBeginning: true,
+        });
+        
       });
-    },
-  });
 
-  wss.on("connection", (ws) => {
-    console.log("WebSocket connection established");
+      socket.on("message", async ({ topic, message }) => {
+        console.log(`Received message from client: ${message}`);
+        console.log(`Sending message to Kafka topic: ${topic}`);
 
-    ws.on("message", async (message) => {
-      console.log(`Received message from client: ${message}`);
-
-      await producer.send({
-        topic: "quickstart-events5",
-        messages: [{ value: message.toString() }],
+        await producer.send({
+          topic: topic,
+          messages: [{ value: message.toString() }],
+        });
       });
     });
-  });
+  } catch (error) {
+    console.log(error);
+  }
+
+}
+
+const consumerRun = async () => {
+
+  try {
+    await consumer.connect();
+
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        console.log(
+          `Received message from Kafka topic ${topic}: ${message.value.toString()}`
+        );
+        io.emit("message", { topic: topic, message: message.value.toString() });
+      },
+    });
+
+  } catch (error) {
+    console.log(error);
+
+  }
+
+
 }
 
 run().catch(console.error);
+consumerRun()
 
 server.listen(3001, () => {
   console.log("Server listening on port 3001");

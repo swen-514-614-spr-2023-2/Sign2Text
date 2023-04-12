@@ -7,20 +7,27 @@ interface ChatboxProps {
 }
 
 const Chatbox = ({  roomid, height }: ChatboxProps) => {
+
+    
     const [isConnected, setIsConnected] = useState(socket.connected);
     //   const [fooEvents, setFooEvents] = useState([]);
     const [value, setValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [Emessaages, setEmessaages] = useState<string[] | []>([])
+    const [msgEvent, setMsgEvent] = useState([])
     
     function onSend(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setIsLoading(true);
 
-        socket.timeout(5000).emit('chat message', {roomId : roomid, text : value.toString(),user:{id:0}}, () => {
+        socket.emit('message', { topic: roomid, message:value.toString()}, () => {
+            console.log("messSent",value.toString());
             setIsLoading(false);
-            setValue("")
         });
+        // socket.timeout(5000).emit('chat message', {roomId : roomid, text : value.toString()}, () => {
+        //     setIsLoading(false);
+        //     setValue("")
+        // });
     }
 
 
@@ -32,10 +39,20 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
         function onDisconnect() {
             setIsConnected(false);
         }
-
-        socket.on("room#"+roomid, (Emessaage) => {
-            setEmessaages(() => [...Emessaages, Emessaage.text]);
+ 
+      
+        socket.emit('subscribe',  roomid, () => {
+            console.log("roomid sent");
+            
         });
+
+        socket.on("message", (Emessaage:string) => {
+            console.log("messReceived",Emessaage);
+            setEmessaages(() => [...Emessaages, Emessaage]);
+        });
+        // socket.on("room#"+roomid, (Emessaage) => {
+        //     setEmessaages(() => [...Emessaages, Emessaage.text]);
+        // });
         // console.log("mes",messages);
         console.log("Emes",Emessaages);
 
@@ -61,7 +78,7 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
             <Paper elevation={8} sx={{ position: "relative", minHeight: height }} >
                 <Typography variant="h2" padding={"4%"} textAlign="center">Chat - Room #{roomid}</Typography>
                 <Box display="flex" flexDirection="column" justifyContent="space-between" sx={{ height: "100%" }}>
-                    <Box sx={{ height: window.innerHeight / 2.8, overflowY: "scroll" }}>
+                    <Box sx={{ height: window.innerHeight / 2.8, overflowY: "auto" }}>
                         <List >
                             {Emessaages.map((emessage, index) => (
                                 <ListItem key={index}>{emessage}</ListItem>

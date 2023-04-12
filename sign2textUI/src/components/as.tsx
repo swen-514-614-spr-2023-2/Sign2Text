@@ -1,140 +1,87 @@
-import { useState,useEffect } from "react";
-
-
-const example = () => {
-    const [messages, setMessages] = useState([]);
-    const [inputValue, setInputValue] = useState("");
-  
-    useEffect(() => {
-      const socket = new WebSocket("ws://localhost:3001");
-      socket.addEventListener("message", (event) => {
-        console.log(`Received message from server: ${event.data}`);
-        setMessages((prevMessages) => [...prevMessages, String(event.data)]);
-      });
-  
-      return () => {
-        socket.close();
-      };
-    }, []);
-  
-    const handleSubmit = (event) => {
-      event.preventDefault();
-  
-      if (inputValue.trim()) {
-        console.log(`Sending message to server: ${inputValue}`);
-  
-        const socket = new WebSocket("ws://localhost:3001");
-        socket.addEventListener("open", () => {
-          socket.send(inputValue);
-          setInputValue("");
-          socket.close();
-        });
-      }
-    };
-  
-    return (
-      <div className="App">
-        <div className="producer">
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Enter message"
-              value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
-            />
-            <button type="submit">Send</button>
-          </form>
-        </div>
-        <div className="consumer">
-          <h2>Messages:</h2>
-          <ul>
-            {messages.map((message, index) => (
-              <li key={index}>{message}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    );}
- 
-export default example;
-
-
 import { Box, Button, Grid, List, ListItem, Paper, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { io } from 'socket.io-client';
+import { socket } from '../utils/socket';
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 interface ChatboxProps {
-  roomid: string | undefined;
-  height: number;
+  roomid: string | undefined
+  height: number
 }
-import React, { useEffect, useState } from 'react';
-import { Kafka } from 'kafkajs';
-import io from 'socket.io-client';
 
-const kafka = new Kafka({
-  clientId: 'my-app',
-  brokers: ['localhost:9092']
-});
+const Chatbox = ({ roomid, height }: ChatboxProps) => {
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [value, setValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [Emessaages, setEmessaages] = useState<string[] | []>([])
 
-const Chat = () => {
-  const [socket, setSocket] = useState(null);
-  const [messages, setMessages] = useState([]);
+  function onSend(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsLoading(true);
+
+    socket.emit('message', value.toString(), () => {
+      setIsLoading(false);
+      setValue('');
+    });
+  }
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3001'); // replace with your server's URL
-    setSocket(newSocket);
+    function onConnect() {
+      setIsConnected(true);
+    }
 
-    newSocket.on('connect', () => {
-      console.log('Socket connected');
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    socket.on("message", (message: string) => {
+      setEmessaages((prevMessages) => [...prevMessages, message]);
     });
 
-    newSocket.on('disconnect', () => {
-      console.log('Socket disconnected');
-    });
-
-    newSocket.on('chat message', (message) => {
-      console.log('Received message:', message);
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
 
     return () => {
-      if (newSocket) {
-        newSocket.close();
-      }
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
     };
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const message = event.target.elements.message.value;
-    sendMessage(message);
-    event.target.reset();
-  };
-
-  const sendMessage = async (message) => {
-    const producer = kafka.producer();
-    await producer.connect();
-    await producer.send({
-      topic: 'chat-messages',
-      messages: [{ value: message }]
-    });
-    await producer.disconnect();
-  };
-
   return (
-    <div>
-      <h1>Chat</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="message" />
-        <button type="submit">Send</button>
-      </form>
-      <ul>
-        {messages.map((message, index) => (
-          <li key={index}>{message}</li>
-        ))}
-      </ul>
+    <div className="Chatbox">
+      <Paper elevation={8} sx={{ position: "relative", minHeight: height }} >
+        <Typography variant="h2" padding={"4%"} textAlign="center">Chat - Room #{roomid}</Typography>
+        <Box display="flex" flexDirection="column" justifyContent="space-between" sx={{ height: "100%" }}>
+          <Box sx={{ height: window.innerHeight / 2.8, overflowY: "scroll" }}>
+            <List >
+              {Emessaages.map((emessage, index) => (
+                <ListItem key={index}>{emessage}</ListItem>
+              ))}
+            </List>
+          </Box>
+          <Box sx={{ position: "absolute", bottom: 0, width: "100%" }}>
+            <form onSubmit={onSend}>
+              <Grid direction="row"
+                justifyContent="center"
+                alignItems="stretch" container spacing={2}>
+                <Grid item xs={9} sx={{}}>
+                  <TextField onChange={e => setValue(e.target.value)}
+                    value={value}
+                    id="outlined-basic" label="Message" sx={{ padding: "2%", width: "98%" }} variant="outlined" />
+                </Grid>
+                <Grid item xs={3} sx={{
+                  display: "flex", justifyContent: "center",
+                  flexWrap: "nowrap",
+                  alignItems: "center",
+                  paddingLeft: "0px"
+                }}>
+                  <Button type="submit" variant="contained" sx={{ width: "80%", height: "80%", }}>send</Button>
+                </Grid>
+              </Grid>
+            </form>
+          </Box>
+        </Box>
+      </Paper>
     </div>
   );
-};
+}
 
-export default Chat;
+export default Chatbox;
