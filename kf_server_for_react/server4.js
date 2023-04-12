@@ -5,7 +5,7 @@ const socketio = require("socket.io");
 const cors = require("cors");
 
 const app = express();
-// app.use(cors());
+app.use(cors());
 const server = http.createServer(app);
 
 const io = socketio(server, {
@@ -27,28 +27,36 @@ const consumer = kafka.consumer({ groupId: "test-consumer-group" });
 async function run() {
   await producer.connect();
   await consumer.connect();
-  await consumer.subscribe({
-    topic: "quickstart-events6",
-    fromBeginning: true,
-  });
-  await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      console.log(`Received message from kafka: ${message.value.toString()}`);
-      io.emit("message", message.value.toString());
-    },
-  });
 
   io.on("connection", (socket) => {
     console.log("Socket.IO connection established");
 
-    socket.on("message", async (message) => {
+    socket.on("subscribe", async (topic) => {
+      console.log(`Subscribing to Kafka topic: ${topic}`);
+      await consumer.subscribe({
+        topic: topic,
+        fromBeginning: true,
+      });
+    });
+
+    socket.on("message", async ({ topic, message }) => {
       console.log(`Received message from client: ${message}`);
+      console.log(`Sending message to Kafka topic: ${topic}`);
 
       await producer.send({
-        topic: "quickstart-events6",
+        topic: topic,
         messages: [{ value: message.toString() }],
       });
     });
+  });
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      console.log(
+        `Received message from Kafka topic ${topic}: ${message.value.toString()}`
+      );
+      io.emit("message", { topic: topic, message: message.value.toString() });
+    },
   });
 }
 
