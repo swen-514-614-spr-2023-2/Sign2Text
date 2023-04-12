@@ -19,24 +19,22 @@ const kafka = new Kafka({
   clientId: "my-app",
   brokers: ["localhost:9092"],
 });
-
+const admin = kafka.admin()
 const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: "test-consumer-group" });
 
 async function run() {
   try {
     await producer.connect();
-
+    await admin.connect()
     io.on("connection", (socket) => {
       console.log("Socket.IO connection established");
 
       socket.on("subscribe", async (topic) => {
-        console.log(`Subscribing to Kafka topic: ${topic}`);
-        await consumer.subscribe({
-          topic: topic,
-          fromBeginning: true,
-        });
         
+        console.log(`Subscribing to Kafka topic: ${topic}`);
+
+        await consumerRun()
       });
 
       socket.on("message", async ({ topic, message }) => {
@@ -59,8 +57,14 @@ async function run() {
 const consumerRun = async () => {
 
   try {
-    await consumer.connect();
 
+    await consumer.stop();
+    const topics = await admin.listTopics();
+    console.log(topics);
+    await consumer.subscribe({
+      topic: topics[3],
+      fromBeginning: true,
+    });
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         console.log(
@@ -69,6 +73,8 @@ const consumerRun = async () => {
         io.emit("message", { topic: topic, message: message.value.toString() });
       },
     });
+    await consumer.resume();
+
 
   } catch (error) {
     console.log(error);
@@ -79,7 +85,7 @@ const consumerRun = async () => {
 }
 
 run().catch(console.error);
-consumerRun()
+
 
 server.listen(3001, () => {
   console.log("Server listening on port 3001");

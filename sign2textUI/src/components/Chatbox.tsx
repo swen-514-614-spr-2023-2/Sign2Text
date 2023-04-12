@@ -5,7 +5,10 @@ interface ChatboxProps {
     roomid: string | undefined
     height: number
 }
-
+interface Emessaage{
+    topic:string
+    message:string
+}
 const Chatbox = ({  roomid, height }: ChatboxProps) => {
 
     
@@ -30,6 +33,18 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
         // });
     }
 
+    useEffect(() => {
+      
+        socket.emit('subscribe',  roomid, () => {
+            console.log("roomid sent");
+            
+        });
+    
+      return () => {
+        
+      }
+    }, [])
+    
 
     useEffect(() => {
         function onConnect() {
@@ -41,14 +56,11 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
         }
  
       
-        socket.emit('subscribe',  roomid, () => {
-            console.log("roomid sent");
-            
-        });
 
-        socket.on("message", (Emessaage:string) => {
+
+        socket.on("message", (Emessaage:Emessaage) => {
             console.log("messReceived",Emessaage);
-            setEmessaages(() => [...Emessaages, Emessaage]);
+            setEmessaages(() => [...Emessaages, Emessaage.message]);
         });
         // socket.on("room#"+roomid, (Emessaage) => {
         //     setEmessaages(() => [...Emessaages, Emessaage.text]);
