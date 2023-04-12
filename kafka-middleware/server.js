@@ -47,6 +47,7 @@ async function run() {
           topic: topic,
           messages: [{ value: message.toString() }],
         });
+        
       });
     });
   } catch (error) {
