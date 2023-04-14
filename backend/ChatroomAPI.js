@@ -4,6 +4,7 @@ const app = express();
 const http = require("http");
 const server = http.Server(app);
 const bodyParser = require("body-parser");
+const { Kafka } = require("kafkajs");
 
 const ChatroomService = require("./ChatroomService");
 
@@ -51,10 +52,45 @@ app.post("/prediction", (req, res) => {
  * body format: {name: #}
  */
 app.post("/chatroom", (req, res) => {
+  // use async/await to handle Kafka promise
   console.log("Recieved request to create chatroom");
   const body = req.body;
   console.log(body);
+
+   // create a Kafka producer instance
+   const kafka = new Kafka({
+    clientId: "my-app",
+    brokers: ["localhost:9092"],
+  });
+
+  // Create an admin client
+  const admin = kafka.admin();
+  const topicName = req.body.name;
   const chRoomId = chatroomService.createChatroom(body["name"]);
+
+  // Connect to Kafka
+  admin
+    .connect()
+    .then(() => {
+      console.log("Connected to Kafka");
+      // Create a new topic
+      return admin.createTopics({
+        topics: [{ topic: chRoomId.toString() }],
+      });
+    })
+    .then(() => {
+      console.log(`Created topic ${chRoomId.toString()}`);
+      // Return the topic and broker details
+      const brokers = kafka.brokers
+        .map((broker) => `${broker.host}:${broker.port}`)
+        .join(",");
+      // res.status(200).send({ topic: topicName, brokers: brokers })
+    })
+    .catch((err) => {
+      console.error(`Error creating topic: ${err}`);
+      // res.status(500).send({ error: 'Error creating topic' })
+    });
+
   res.status(200).send({ roomId: chRoomId });
 });
 
