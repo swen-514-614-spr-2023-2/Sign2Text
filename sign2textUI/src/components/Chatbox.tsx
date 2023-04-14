@@ -5,26 +5,26 @@ interface ChatboxProps {
     roomid: string | undefined
     height: number
 }
-interface Emessaage{
-    topic:string
-    message:string
+interface Emessaage {
+    topic: string
+    message: string
 }
-const Chatbox = ({  roomid, height }: ChatboxProps) => {
+const Chatbox = ({ roomid, height }: ChatboxProps) => {
 
-    
+
     const [isConnected, setIsConnected] = useState(socket.connected);
     //   const [fooEvents, setFooEvents] = useState([]);
     const [value, setValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [Emessaages, setEmessaages] = useState<string[] | []>([])
     const [msgEvent, setMsgEvent] = useState([])
-    
+    const [emitted, setemitted] = useState(false)
     function onSend(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setIsLoading(true);
 
-        socket.emit('message', { topic: roomid, message:value.toString()}, () => {
-            console.log("messSent",value.toString());
+        socket.emit('message', { topic: roomid, message: value.toString() }, () => {
+            console.log("messSent", value.toString());
             setIsLoading(false);
         });
         // socket.timeout(5000).emit('chat message', {roomId : roomid, text : value.toString()}, () => {
@@ -33,18 +33,6 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
         // });
     }
 
-    useEffect(() => {
-      
-        socket.emit('subscribe',  roomid, () => {
-            console.log("roomid sent");
-            
-        });
-    
-      return () => {
-        
-      }
-    }, [])
-    
 
     useEffect(() => {
         function onConnect() {
@@ -54,27 +42,34 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
         function onDisconnect() {
             setIsConnected(false);
         }
- 
-      
+
+        if (!emitted) {
+            socket.emit('subscribe', roomid, () => {
+                console.log("roomid sent");
+                setemitted(true)
+
+            });
+            setemitted(true)
+        }
 
 
-        socket.on("message", (Emessaage:Emessaage) => {
-            console.log("messReceived",Emessaage);
+        socket.on("message", (Emessaage: Emessaage) => {
+            console.log("messReceived", Emessaage);
             setEmessaages(() => [...Emessaages, Emessaage.message]);
         });
         // socket.on("room#"+roomid, (Emessaage) => {
         //     setEmessaages(() => [...Emessaages, Emessaage.text]);
         // });
         // console.log("mes",messages);
-        console.log("Emes",Emessaages);
+        console.log("Emes", Emessaages);
 
         // function onFooEvent(message: string) {
         //   setFooEvents((prevMessages) => [...prevMessages, message]);
         // }
 
- 
-        
-        
+
+
+
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         // socket.on('foo', onFooEvent);
@@ -100,10 +95,10 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
                     </Box>
 
                     <Box sx={{ position: "absolute", bottom: 0, width: "100%" }}>
-                    <form onSubmit={onSend}>
-                        <Grid direction="row"
-                            justifyContent="center"
-                            alignItems="stretch" container spacing={2}>
+                        <form onSubmit={onSend}>
+                            <Grid direction="row"
+                                justifyContent="center"
+                                alignItems="stretch" container spacing={2}>
 
                                 <Grid item xs={9} sx={{}} >
                                     <TextField onChange={e => setValue(e.target.value)}
@@ -115,10 +110,10 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
                                     alignItems: "center",
                                     paddingLeft: "0px"
                                 }}>
-                                    <Button type="submit"  variant="contained" sx={{ width: "80%", height: "80%", }}>send</Button>
+                                    <Button type="submit" variant="contained" sx={{ width: "80%", height: "80%", }}>send</Button>
                                 </Grid>
-                        </Grid>
-                    </form>
+                            </Grid>
+                        </form>
 
                     </Box>
                 </Box>
