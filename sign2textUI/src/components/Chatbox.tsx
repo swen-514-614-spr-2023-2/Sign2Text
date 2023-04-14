@@ -93,7 +93,7 @@ const Chatbox = ({  roomid, height }: ChatboxProps) => {
                     <Box sx={{ height: window.innerHeight / 2.8, overflowY: "auto" }}>
                         <List >
                             {Emessaages.map((emessage, index) => (
-                                <ListItem key={index}>{emessage}</ListItem>
+                                <ListItem key={index}> <Typography>{emessage}</Typography> </ListItem>
                             ))}
 
                         </List>

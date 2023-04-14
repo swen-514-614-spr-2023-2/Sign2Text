@@ -34,7 +34,7 @@ async function run() {
         
         console.log(`Subscribing to Kafka topic: ${topic}`);
 
-        await consumerRun()
+        await consumerRun(topic.toString())
       });
 
       socket.on("message", async ({ topic, message }) => {
@@ -54,15 +54,15 @@ async function run() {
 
 }
 
-const consumerRun = async () => {
+const consumerRun = async (topic) => {
 
   try {
 
     await consumer.stop();
-    const topics = await admin.listTopics();
-    console.log(topics);
+    // const topics = await admin.listTopics();
+    console.log("LOOK HEREE!!!!!",topic);
     await consumer.subscribe({
-      topic: topics[3],
+      topic: topic,
       fromBeginning: true,
     });
     await consumer.run({
