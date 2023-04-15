@@ -23,8 +23,10 @@ def upload_image():
     room_ = request.form['roomId']
     file_ = request.files['image']
 
-    url = 'http://18.208.236.128:3000/prediction'  # replace with the URL of the other service's API endpoint
-    data = {'text': model.getPrediction(file_), 'roomId': room_}  # replace with the data you want to send in the request
+    # replace with the URL of the other service's API endpoint
+    url = 'http://18.208.236.128:3000/prediction'
+    # replace with the data you want to send in the request
+    data = {'text': model.getPrediction(file_), 'roomId': room_}
 
     response = requests.post(url, json=data)
 
@@ -35,4 +37,4 @@ def upload_image():
 
 if __name__ == '__main__':
     # socketio.start_background_task(send_random_message)
-    app.run( debug=True)
+    app.run(host="0.0.0.0", debug=True)
