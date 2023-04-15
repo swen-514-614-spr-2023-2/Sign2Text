@@ -40,6 +40,9 @@ class DatabaseConnection{
                         }
                     });
                 }
+                else{
+                    console.log("Did not create table "+params['TableName']+" since it alreadt exists");
+                }
             }
         });
 
