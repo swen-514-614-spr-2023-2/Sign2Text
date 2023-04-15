@@ -16,13 +16,52 @@ class DatabaseConnection{
 
     }
 
-    async init(options={}){
-         
+    init(){
+        this.#dynamodb.listTables({},(err,data)=>{
+            if(err) console.log(err, err.stack);
+
+            else{
+                if(data.TableNames.filter(name => name == this.#tableName).length == 0){
+                    console.log(`Table: ${this.#tableName} does not exist. Creating...`);
+                    this.createTableInDB();
+                }
+            }
+        })
         
     }
 
-    kafkaTopicTableExists(){
+    createTableInDB(){
+        const params = {
+            TableName : this.#tableName,
 
+            AttributeDefinitions: [
+                {
+                    AttributeName : "topicName",
+                    AttributeType : "S"
+                }
+            ],
+
+            KeySchema: [
+                {
+                    AttributeName : "topicName",
+                    KeyType : "HASH"
+                }
+            ],
+
+            ProvisionedThroughput: {
+                ReadCapacityUnits: 5, 
+                WriteCapacityUnits: 5
+            }
+        
+        }
+
+        this.#dynamodb.createTable(params,(err, data)=>{
+            if(err) console.log(err, err.stack);
+            else{
+                console.log("Table created successfully? Check");
+                console.log(data);
+            }
+        });
     }
 }
 
@@ -34,10 +73,14 @@ async function test(){
     //     else console.log(data);
     // });
 
-    dynamodb.deleteTable({TableName : "firstTable"},(err,data)=>{
-        if(err) console.log(err, err.stack);
-        else console.log(data);
-    })
+    // dynamodb.deleteTable({TableName : "firstTable"},(err,data)=>{
+    //     if(err) console.log(err, err.stack);
+    //     else console.log(data);
+    // });
+
+    var obj = new DatabaseConnection();
+    obj.init();
+
 }
 
 test();
