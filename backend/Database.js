@@ -5,20 +5,19 @@ AWS.config.loadFromPath('./config.json');
 
 
 class DatabaseConnection{
-    #client;
+    #dynamodb;
     #tableName;
 
     constructor(region='us-east-1', tableName='kafkaTopicTable'){
         AWS.config.loadFromPath('./config.json');
 
-        this.#client = new DynamoDBClient({region: region});
+        this.#dynamodb = new AWS.DynamoDB();
         this.#tableName = tableName
 
     }
 
     async init(options={}){
-        const data = await this.#client.send(new ListTablesCommand(options));
-        
+         
         
     }
 
