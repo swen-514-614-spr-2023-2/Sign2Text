@@ -14,6 +14,8 @@ class DatabaseConnection{
         this.#dynamodb = new AWS.DynamoDB();
         this.#tableName = tableName
 
+        this.init();
+
     }
 
     init(){
@@ -26,43 +28,68 @@ class DatabaseConnection{
                     this.createTableInDB();
                 }
             }
-        })
+        });
         
     }
 
-    createTableInDB(){
-        const params = {
-            TableName : this.#tableName,
+    createTableInDBIfNotExists(params){
 
+        this.#dynamodb.listTables({},(err,data)=>{
+            if(err) console.log(err, err.stack);
+
+            else{
+                if(data.TableNames.filter(name => name == params['TableName']).length == 0){
+                    console.log(`Table: ${params['TableName']} does not exist. Creating...`);
+
+                    this.#dynamodb.createTable(params,(err, data)=>{
+                        if(err) console.log(err, err.stack);
+                        else{
+                            console.log("Table created successfully? Check");
+                            console.log(data);
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+    createRoomTable(){
+        const params = {
             AttributeDefinitions: [
                 {
-                    AttributeName : "topicName",
+                    AttributeName : "roomName",
+                    AttributeType : "S"
+                },
+                {
+                    AttributeName : "roomId",
                     AttributeType : "S"
                 }
             ],
 
             KeySchema: [
                 {
-                    AttributeName : "topicName",
+                    AttributeName : "roomName",
                     KeyType : "HASH"
+                },
+                {
+                    AttributeName : "roomId",
+                    KeyType : "RANGE"
                 }
             ],
 
-            ProvisionedThroughput: {
-                ReadCapacityUnits: 5, 
-                WriteCapacityUnits: 5
-            }
-        
-        }
+            ProvisionedThroughput : {
+                ReadCapacityUnits : 5, 
+                WriteCapacityUnits : 5
+            },
 
-        this.#dynamodb.createTable(params,(err, data)=>{
-            if(err) console.log(err, err.stack);
-            else{
-                console.log("Table created successfully? Check");
-                console.log(data);
-            }
-        });
+            TableName : "roomTable"
+        };
+
+        this.createTableInDBIfNotExists(params);
     }
+
+    
 }
 
 async function test(){
@@ -84,3 +111,5 @@ async function test(){
 }
 
 test();
+
+module.exports = DatabaseConnection;
