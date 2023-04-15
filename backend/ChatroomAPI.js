@@ -47,7 +47,7 @@ app.post("/prediction", (req, res) => {
   console.log("Recieved new prediction");
   const body = req.body;
   console.log(body);
-
+try {
   producer.send({
     topic: body.roomId.toString(),
     messages: [{ value: body.text.toString() }],
@@ -60,6 +60,11 @@ app.post("/prediction", (req, res) => {
   */
   res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send({ roomId: body.roomId });
+  
+} catch(error){
+  console.log(error);
+}
+  
 });
 
 //create new room
