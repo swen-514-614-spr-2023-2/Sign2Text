@@ -15,7 +15,7 @@ const Create = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = fetch(`http://localhost:3000/chatroom`, {
+    const response = fetch(`http://18.208.236.128:3000/chatroom`, {
       method: "POST",
       body: JSON.stringify({ name: chatroomName}),
       headers:{"Content-Type": "application/json"}

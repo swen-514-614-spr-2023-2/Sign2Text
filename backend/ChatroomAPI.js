@@ -60,7 +60,7 @@ app.post("/chatroom", (req, res) => {
    // create a Kafka producer instance
    const kafka = new Kafka({
     clientId: "my-app",
-    brokers: ["localhost:9092"],
+    brokers: ["44.215.244.102:9092"],
   });
 
   // Create an admin client

@@ -32,7 +32,7 @@ export default function Rooms() {
 
 
   useEffect(() => {
-    const response = fetch("http://localhost:3000/chatroom", {})
+    const response = fetch("http://18.208.236.128:3000/chatroom", {})
       .then(response => {
         // if (!response.ok) {
         //   throw new Error("could not fetch")

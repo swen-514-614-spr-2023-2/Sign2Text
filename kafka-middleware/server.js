@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 const io = socketio(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*",
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -17,7 +17,7 @@ const io = socketio(server, {
 
 const kafka = new Kafka({
   clientId: "my-app",
-  brokers: ["localhost:9092"],
+  brokers: ["44.215.244.102:9092"],
 });
 const admin = kafka.admin()
 const producer = kafka.producer();
