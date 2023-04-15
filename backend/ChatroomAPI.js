@@ -90,7 +90,8 @@ app.post("/chatroom", (req, res) => {
       console.error(`Error creating topic: ${err}`);
       // res.status(500).send({ error: 'Error creating topic' })
     });
-
+  
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send({ roomId: chRoomId });
 });
 
@@ -99,6 +100,8 @@ app.delete("/chatroom", (req, res) => {
   console.log("Recieved request to delete chatroom");
   const body = req.body;
   console.log(`Body: ${body}`);
+
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   if (chatroomService.deleteChatroom(body["roomId"])) {
     res.status(200).end();
   } else res.status(409).end();
@@ -107,6 +110,7 @@ app.delete("/chatroom", (req, res) => {
 app.get("/chatroom", (req, res) => {
   const allRooms = chatroomService.getAllChatrooms();
   console.log(`In chatroom API: ${allRooms}`);
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send(allRooms);
 });
 
@@ -116,6 +120,8 @@ app.get("/chatroom", (req, res) => {
 app.put("/chatroom/users", (req, res) => {
   console.log("Recieved request to add user to chatroom");
   const body = req.body;
+
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   if (chatroomService.enterChatroom(body["roomId"], body["user"])) {
     res.status(200).end();
   } else res.status(409).end();
