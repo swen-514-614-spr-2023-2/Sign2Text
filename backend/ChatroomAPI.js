@@ -9,6 +9,12 @@ const { Kafka } = require("kafkajs");
 const ChatroomService = require("./ChatroomService");
 
 const chatroomService = new ChatroomService();
+const kafka = new Kafka({
+  clientId: "my-app",
+  brokers: ["44.215.244.102:9092"],
+});
+const admin = kafka.admin();
+const producer = kafka.producer();
 
 const cors = require("cors");
 app.use(cors());
@@ -41,9 +47,19 @@ app.post("/prediction", (req, res) => {
   console.log("Recieved new prediction");
   const body = req.body;
   console.log(body);
+
+  producer.send({
+    topic: body.roomId,
+    messages: [{ value: roomId.text.toString() }],
+  });
+  /** use this when directly connecting to the browser clients with socket.io
+   
   if(chatroomService.sendMessage(body)){
     io.emit(`room#${body["roomId"]}`, body);
   }
+  */
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
+  res.status(200).send({ roomId: body.roomId });
 });
 
 //create new room
@@ -58,13 +74,10 @@ app.post("/chatroom", (req, res) => {
   console.log(body);
 
    // create a Kafka producer instance
-   const kafka = new Kafka({
-    clientId: "my-app",
-    brokers: ["44.215.244.102:9092"],
-  });
+   
 
   // Create an admin client
-  const admin = kafka.admin();
+  // const admin = kafka.admin();
   const topicName = req.body.name;
   const chRoomId = chatroomService.createChatroom(body["name"]);
 
