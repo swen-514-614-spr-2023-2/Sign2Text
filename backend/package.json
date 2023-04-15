@@ -9,6 +9,7 @@
   "author": "Prathamesh Patwekar",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.312.0",
     "aws-sdk": "^2.1359.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
