@@ -91,7 +91,7 @@ app.post("/chatroom", (req, res) => {
       // res.status(500).send({ error: 'Error creating topic' })
     });
 
-  res.header(referrerPolicy, 'unsafe-url').status(200).send({ roomId: chRoomId });
+  res.status(200).send({ roomId: chRoomId });
 });
 
 //delete chatroom
@@ -107,7 +107,7 @@ app.delete("/chatroom", (req, res) => {
 app.get("/chatroom", (req, res) => {
   const allRooms = chatroomService.getAllChatrooms();
   console.log(`In chatroom API: ${allRooms}`);
-  res.header(referrerPolicy, 'unsafe-url').status(200).send(allRooms);
+  res.status(200).send(allRooms);
 });
 
 /**

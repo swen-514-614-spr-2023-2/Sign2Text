@@ -33,7 +33,7 @@ export default function Rooms() {
 
   useEffect(() => {
     const response = fetch("http://18.208.236.128:3000/chatroom", {
-      headers:{referrerPolicy: 'unsafe-url'}
+      
     })
       .then(response => {
         // if (!response.ok) {

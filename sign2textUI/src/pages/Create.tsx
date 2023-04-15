@@ -19,7 +19,7 @@ const Create = () => {
       method: "POST",
       body: JSON.stringify({ name: chatroomName}),
       headers:{"Content-Type": "application/json",
-      referrerPolicy: 'unsafe-url'
+      
     }
 
     }).then((res) => {
