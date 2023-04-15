@@ -18,7 +18,9 @@ const Create = () => {
     const response = fetch(`http://18.208.236.128:3000/chatroom`, {
       method: "POST",
       body: JSON.stringify({ name: chatroomName}),
-      headers:{"Content-Type": "application/json"}
+      headers:{"Content-Type": "application/json",
+      referrerPolicy: '"unsafe-url"'
+    }
 
     }).then((res) => {
       setSuccessMessage("Chatroom " + chatroomName + " created successfully")
