@@ -19,17 +19,8 @@ class DatabaseConnection{
     }
 
     init(){
-        this.#dynamodb.listTables({},(err,data)=>{
-            if(err) console.log(err, err.stack);
-
-            else{
-                if(data.TableNames.filter(name => name == this.#tableName).length == 0){
-                    console.log(`Table: ${this.#tableName} does not exist. Creating...`);
-                    this.createTableInDB();
-                }
-            }
-        });
-        
+        this.createMessageTable();
+        this.createRoomTable();
     }
 
     createTableInDBIfNotExists(params){
@@ -97,10 +88,6 @@ class DatabaseConnection{
                     AttributeType: "S"
                 },
                 {
-                    AttributeName: "roomId",
-                    AttributeType: "S"
-                },
-                {
                     AttributeName: "timestamp",
                     AttributeType: "S"
                 }
@@ -124,6 +111,8 @@ class DatabaseConnection{
 
             TableName: "messageTable" 
         }
+
+        this.createTableInDBIfNotExists(params);
     }
 
     
@@ -132,21 +121,9 @@ class DatabaseConnection{
 async function test(){
     const dynamodb = new AWS.DynamoDB();
 
-    // dynamodb.listTables({},(err,data)=>{
-    //     if(err) console.log(err, err.stack)
-    //     else console.log(data);
-    // });
-
-    // dynamodb.deleteTable({TableName : "firstTable"},(err,data)=>{
-    //     if(err) console.log(err, err.stack);
-    //     else console.log(data);
-    // });
-
     var obj = new DatabaseConnection();
-    obj.init();
-
 }
 
 test();
 
-module.exports = DatabaseConnection;
+//module.exports = DatabaseConnection;
