@@ -50,7 +50,7 @@ app.post("/prediction", (req, res) => {
 
   producer.send({
     topic: body.roomId.toString(),
-    messages: [{ value: roomId.text.toString() }],
+    messages: [{ value: body.text.toString() }],
   });
   /** use this when directly connecting to the browser clients with socket.io
    
