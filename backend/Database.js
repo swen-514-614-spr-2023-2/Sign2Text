@@ -58,35 +58,72 @@ class DatabaseConnection{
         const params = {
             AttributeDefinitions: [
                 {
-                    AttributeName : "roomName",
-                    AttributeType : "S"
+                    AttributeName: "roomName",
+                    AttributeType: "S"
                 },
                 {
-                    AttributeName : "roomId",
-                    AttributeType : "S"
+                    AttributeName: "roomId",
+                    AttributeType: "S"
                 }
             ],
 
             KeySchema: [
                 {
-                    AttributeName : "roomName",
+                    AttributeName: "roomName",
                     KeyType : "HASH"
                 },
                 {
-                    AttributeName : "roomId",
-                    KeyType : "RANGE"
+                    AttributeName: "roomId",
+                    KeyType: "RANGE"
                 }
             ],
 
-            ProvisionedThroughput : {
-                ReadCapacityUnits : 5, 
-                WriteCapacityUnits : 5
+            ProvisionedThroughput: {
+                ReadCapacityUnits: 5, 
+                WriteCapacityUnits: 5
             },
 
-            TableName : "roomTable"
+            TableName: "roomTable"
         };
 
         this.createTableInDBIfNotExists(params);
+    }
+
+    createMessageTable(){
+        const params = {
+            AttributeDefinitions: [
+                {
+                    AttributeName: "message",
+                    AttributeType: "S"
+                },
+                {
+                    AttributeName: "roomId",
+                    AttributeType: "S"
+                },
+                {
+                    AttributeName: "timestamp",
+                    AttributeType: "S"
+                }
+            ],
+
+            KeySchema: [
+                {
+                    AttributeName: "message",
+                    KeyType : "HASH"
+                },
+                {
+                    AttributeName: "timestamp",
+                    KeyType: "RANGE"
+                }
+            ],
+
+            ProvisionedThroughput: {
+                ReadCapacityUnits: 5, 
+                WriteCapacityUnits: 5
+            },
+
+            TableName: "messageTable" 
+        }
     }
 
     
