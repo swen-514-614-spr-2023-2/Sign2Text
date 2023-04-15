@@ -9,8 +9,10 @@ const { Kafka } = require("kafkajs");
 const ChatroomService = require("./ChatroomService");
 
 const chatroomService = new ChatroomService();
+const dbConnection = new DatabaseConnection();
 
 const cors = require("cors");
+const DatabaseConnection = require("./Database");
 app.use(cors());
 app.use(bodyParser.json()); // for parsing application/json
 

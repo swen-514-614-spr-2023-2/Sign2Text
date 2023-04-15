@@ -6,13 +6,15 @@ AWS.config.loadFromPath('./config.json');
 
 class DatabaseConnection{
     #dynamodb;
-    #tableName;
+    #roomTable;
+    #messageTable;
 
-    constructor(region='us-east-1', tableName='kafkaTopicTable'){
+    constructor(region='us-east-1', roomTable='roomTable', messageTable='messageTable'){
         AWS.config.loadFromPath('./config.json');
 
         this.#dynamodb = new AWS.DynamoDB();
-        this.#tableName = tableName
+        this.#roomTable = roomTable;
+        this.#messageTable = messageTable;
 
         this.init();
 
@@ -41,7 +43,7 @@ class DatabaseConnection{
                     });
                 }
                 else{
-                    console.log("Did not create table "+params['TableName']+" since it alreadt exists");
+                    console.log("Did not create table "+params['TableName']+" since it already exists");
                 }
             }
         });
@@ -77,7 +79,7 @@ class DatabaseConnection{
                 WriteCapacityUnits: 5
             },
 
-            TableName: "roomTable"
+            TableName: this.#roomTable
         };
 
         this.createTableInDBIfNotExists(params);
@@ -112,21 +114,37 @@ class DatabaseConnection{
                 WriteCapacityUnits: 5
             },
 
-            TableName: "messageTable" 
+            TableName: this.#messageTable 
         }
 
         this.createTableInDBIfNotExists(params);
     }
 
+    createNewRoomInDB(roomId, roomName){
+        var params = {
+            Item : {
+                "roomName" : {
+                    S : roomName
+                },
+
+                "roomId" : {
+                    S : roomId
+                }
+            },
+
+            ReturnConsumedCapacity : "TOTAL",
+            TableName : this.#roomTable
+        };
+
+        this.#dynamodb.putItem(params, (err,data)=>{
+            if(err) console.log(err, err.stack);
+            else{
+                console.log(data);
+            }
+        });
+    }
+
     
 }
 
-async function test(){
-    const dynamodb = new AWS.DynamoDB();
-
-    var obj = new DatabaseConnection();
-}
-
-test();
-
-//module.exports = DatabaseConnection;
+module.exports = DatabaseConnection;
