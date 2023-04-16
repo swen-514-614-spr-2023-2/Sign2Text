@@ -86,12 +86,7 @@ app.post("/chatroom", (req, res) => {
   console.log("Recieved request to create chatroom");
   const body = req.body;
   console.log(body);
-
-   // create a Kafka producer instance
-   
-
-  // Create an admin client
-  // const admin = kafka.admin();
+  
   const topicName = req.body.name;
   const chRoomId = chatroomService.createChatroom(body["name"]);
 
