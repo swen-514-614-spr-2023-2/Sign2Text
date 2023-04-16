@@ -86,7 +86,7 @@ app.post("/chatroom", (req, res) => {
       const brokers = kafka.brokers
         .map((broker) => `${broker.host}:${broker.port}`)
         .join(",");
-        dbConnection.createNewRoomInDB(String(chRoomId),body['name']);
+        dbConnection.createNewRoomInDB(String(chRoomId),body['name'],{});
       // res.status(200).send({ topic: topicName, brokers: brokers })
     })
     .catch((err) => {
