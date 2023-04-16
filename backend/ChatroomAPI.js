@@ -47,11 +47,20 @@ app.post("/prediction", (req, res) => {
   console.log("Recieved new prediction");
   const body = req.body;
   console.log(body);
+  
+  
 try {
-  producer.send({
-    topic: body.roomId.toString(),
-    messages: [{ value: body.text.toString() }],
-  });
+    producer
+    .connect()
+    .then(() => {
+      console.log("connected to Kafka")
+
+      producer.send({
+        topic: body.roomId.toString(),
+        messages: [{ value: body.text.toString() }]
+      });
+    })
+
   /** use this when directly connecting to the browser clients with socket.io
    
   if(chatroomService.sendMessage(body)){
@@ -60,7 +69,7 @@ try {
   */
   res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send({ roomId: body.roomId });
-  
+
 } catch(error){
   console.log(error);
 }
