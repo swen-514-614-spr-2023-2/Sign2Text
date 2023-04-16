@@ -1,4 +1,5 @@
 name: s2tpy
+
 channels:
   - defaults
 dependencies:

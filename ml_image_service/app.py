@@ -6,7 +6,9 @@ import base64
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from flask import Flask, request, jsonify
+
 import requests
+
 
 
 app = Flask(__name__)
@@ -20,6 +22,7 @@ app.config['SECRET_KEY'] = 'secret!'
 def upload_image():
     if 'image' not in request.files:
         return 'No image provided', 400
+
     room_ = request.form['roomId']
     file_ = request.files['image']
 
@@ -31,6 +34,7 @@ def upload_image():
     response = requests.post(url, json=data)
 
     # socketio.emit('message', model.getPrediction(file_))
+
 
     return 'Image uploaded successfully', 200
 
