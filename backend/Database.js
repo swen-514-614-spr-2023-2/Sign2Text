@@ -120,7 +120,7 @@ class DatabaseConnection{
         this.createTableInDBIfNotExists(params);
     }
 
-    createNewRoomInDB(roomId, roomName){
+    createNewRoomInDB(roomId, roomName, otherParams={}){
         var params = {
             Item : {
                 "roomName" : {
@@ -131,14 +131,18 @@ class DatabaseConnection{
                     S : roomId
                 },
 
-                "anotherOne": {
-                    S : "YO"
-                }
             },
 
             ReturnConsumedCapacity : "TOTAL",
             TableName : this.#roomTable
         };
+
+        for(const [key, value] of Object.entries(otherParams)){
+            let temp = params['Item'];
+            temp[key] = {
+                S: value
+            };
+        }
 
         this.#dynamodb.putItem(params, (err,data)=>{
             if(err) console.log(err, err.stack);
@@ -165,23 +169,20 @@ class DatabaseConnection{
         this.#dynamodb.getItem(params,(err,data)=>{
             if(err) console.log(err, err.stack);
             else console.log(data);
-        })
+        });
     }
 
     
 }
 
-//module.exports = DatabaseConnection;
-
-function test(){
-    var dbConn = new DatabaseConnection();
+(()=>{
+    var myConn = new DatabaseConnection();
 
     setTimeout(()=>{
-        dbConn.createNewRoomInDB("3","holaa");
-        dbConn.getRoomInDB("3","holaa");
-    }, 8000);
+        myConn.createNewRoomInDB("3","BIKE",{"Country" : "India", "City" : "Bombay"});
+    },10000);
 
-    
-}
-
-test();
+    setTimeout(()=>{
+        myConn.getRoomInDB("3","BIKE");
+    },15000);
+})();
