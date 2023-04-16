@@ -175,14 +175,4 @@ class DatabaseConnection{
     
 }
 
-(()=>{
-    var myConn = new DatabaseConnection();
-
-    setTimeout(()=>{
-        myConn.createNewRoomInDB("3","BIKE",{"Country" : "India", "City" : "Bombay"});
-    },10000);
-
-    setTimeout(()=>{
-        myConn.getRoomInDB("3","BIKE");
-    },15000);
-})();
+module.exports = DatabaseConnection;
