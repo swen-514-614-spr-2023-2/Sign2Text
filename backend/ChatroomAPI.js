@@ -11,6 +11,13 @@ const ChatroomService = require("./ChatroomService");
 const chatroomService = new ChatroomService();
 const dbConnection = new DatabaseConnection();
 
+const kafka = new Kafka({
+  clientId: "my-app",
+  brokers: ["44.215.244.102:9092"],
+});
+const admin = kafka.admin();
+const producer = kafka.producer();
+
 const cors = require("cors");
 const DatabaseConnection = require("./Database");
 app.use(cors());
@@ -43,9 +50,33 @@ app.post("/prediction", (req, res) => {
   console.log("Recieved new prediction");
   const body = req.body;
   console.log(body);
+  
+  
+try {
+    producer
+    .connect()
+    .then(() => {
+      console.log("connected to Kafka")
+
+      producer.send({
+        topic: body.roomId.toString(),
+        messages: [{ value: body.text.toString() }]
+      });
+    })
+
+  /** use this when directly connecting to the browser clients with socket.io
+   
   if(chatroomService.sendMessage(body)){
     io.emit(`room#${body["roomId"]}`, body);
   }
+  */
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
+  res.status(200).send({ roomId: body.roomId });
+
+} catch(error){
+  console.log(error);
+}
+  
 });
 
 //create new room
@@ -58,15 +89,7 @@ app.post("/chatroom", (req, res) => {
   console.log("Recieved request to create chatroom");
   const body = req.body;
   console.log(body);
-
-   // create a Kafka producer instance
-   const kafka = new Kafka({
-    clientId: "my-app",
-    brokers: ["localhost:9092"],
-  });
-
-  // Create an admin client
-  const admin = kafka.admin();
+  
   const topicName = req.body.name;
   const chRoomId = chatroomService.createChatroom(body["name"]);
 
@@ -93,7 +116,8 @@ app.post("/chatroom", (req, res) => {
       console.error(`Error creating topic: ${err}`);
       // res.status(500).send({ error: 'Error creating topic' })
     });
-
+  
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send({ roomId: chRoomId });
 });
 
@@ -102,6 +126,8 @@ app.delete("/chatroom", (req, res) => {
   console.log("Recieved request to delete chatroom");
   const body = req.body;
   console.log(`Body: ${body}`);
+
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   if (chatroomService.deleteChatroom(body["roomId"])) {
     res.status(200).end();
   } else res.status(409).end();
@@ -110,6 +136,7 @@ app.delete("/chatroom", (req, res) => {
 app.get("/chatroom", (req, res) => {
   const allRooms = chatroomService.getAllChatrooms();
   console.log(`In chatroom API: ${allRooms}`);
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send(allRooms);
 });
 
@@ -119,6 +146,8 @@ app.get("/chatroom", (req, res) => {
 app.put("/chatroom/users", (req, res) => {
   console.log("Recieved request to add user to chatroom");
   const body = req.body;
+
+  res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   if (chatroomService.enterChatroom(body["roomId"], body["user"])) {
     res.status(200).end();
   } else res.status(409).end();
