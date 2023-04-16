@@ -1,0 +1,19 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd sign2textUI
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    # Specifies the build output directory.
+    baseDirectory: sign2textUI/dist/
+    # Specifies the files to be included in the build artifact.
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

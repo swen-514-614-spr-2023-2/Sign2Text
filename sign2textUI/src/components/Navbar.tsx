@@ -10,11 +10,13 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import SignLanguageIcon from '@mui/icons-material/SignLanguage';import { useState } from 'react'
+import SignLanguageIcon from '@mui/icons-material/SignLanguage'; import { useState } from 'react'
+import { StyledEngineProvider } from '@mui/material';
+import { StyledLink } from '../utils/styles';
 
 
-const pages = ['Products', 'Pricing'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Sign2Textut'];
+const pages = ['Home', 'Rooms'];
+const settings = ['Not yet implemented.'];
 
 const Navbar = () => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -23,18 +25,18 @@ const Navbar = () => {
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
-      };
-      const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    };
+    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
-      };
-    
-      const handleCloseNavMenu = () => {
+    };
+
+    const handleCloseNavMenu = () => {
         setAnchorElNav(null);
-      };
-    
-      const handleCloseUserMenu = () => {
+    };
+
+    const handleCloseUserMenu = () => {
         setAnchorElUser(null);
-      };
+    };
 
 
 
@@ -91,11 +93,17 @@ const Navbar = () => {
                                     display: { xs: 'block', md: 'none' },
                                 }}
                             >
-                                {pages.map((page) => (
-                                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                        <Typography textAlign="center">{page}</Typography>
+
+                                <StyledLink to={'/'}>
+                                    <MenuItem onClick={handleCloseNavMenu}>
+                                        <Typography textAlign="center">Home </Typography>
                                     </MenuItem>
-                                ))}
+                                </StyledLink>
+                                <StyledLink to={'/rooms'}>
+                                    <MenuItem onClick={handleCloseNavMenu}>
+                                        <Typography textAlign="center">Rooms</Typography>
+                                    </MenuItem>
+                                </StyledLink>
                             </Menu>
                         </Box>
                         <SignLanguageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -118,15 +126,23 @@ const Navbar = () => {
                             Sign2Text
                         </Typography>
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                            {pages.map((page) => (
+                            <StyledLink to={'/'}>
+
                                 <Button
-                                    key={page}
                                     onClick={handleCloseNavMenu}
                                     sx={{ my: 2, color: 'white', display: 'block' }}
                                 >
-                                    {page}
+                                    HOMe
                                 </Button>
-                            ))}
+                            </StyledLink>
+                            <StyledLink to={'/rooms'}>
+                                <Button
+                                    onClick={handleCloseNavMenu}
+                                    sx={{ my: 2, color: 'white', display: 'block' }}
+                                >
+                                    rooms
+                                </Button>
+                            </StyledLink>
                         </Box>
 
                         <Box sx={{ flexGrow: 0 }}>
