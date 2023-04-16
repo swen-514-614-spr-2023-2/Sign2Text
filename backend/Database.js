@@ -129,6 +129,10 @@ class DatabaseConnection{
 
                 "roomId" : {
                     S : roomId
+                },
+
+                "anotherOne": {
+                    S : "YO"
                 }
             },
 
@@ -144,7 +148,40 @@ class DatabaseConnection{
         });
     }
 
+    getRoomInDB(roomId, roomName){
+        var params = {
+            Key: {
+                "roomName": {
+                    S: roomName
+                },
+                "roomId": {
+                    S: roomId
+                }
+            },
+            TableName : this.#roomTable
+
+        };
+
+        this.#dynamodb.getItem(params,(err,data)=>{
+            if(err) console.log(err, err.stack);
+            else console.log(data);
+        })
+    }
+
     
 }
 
-module.exports = DatabaseConnection;
+//module.exports = DatabaseConnection;
+
+function test(){
+    var dbConn = new DatabaseConnection();
+
+    setTimeout(()=>{
+        dbConn.createNewRoomInDB("3","holaa");
+        dbConn.getRoomInDB("3","holaa");
+    }, 8000);
+
+    
+}
+
+test();
