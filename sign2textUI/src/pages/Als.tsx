@@ -38,7 +38,7 @@ const Als = () => {
         if (imageSrc) {
             setUrl(imageSrc);
             setImage(imageSrc);
-
+            console.log(imageSrc);
             try {
                 const formData = new FormData();
                 formData.append("image", dataURItoBlob(imageSrc));
