@@ -55,7 +55,8 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
 
         socket.on("message", (Emessaage: Emessaage) => {
             console.log("messReceived", Emessaage);
-            setEmessaages(() => [...Emessaages, Emessaage.message]);
+            if (Emessaage.topic === roomid) {
+                setEmessaages(() => [...Emessaages, Emessaage.message]);}
         });
         // socket.on("room#"+roomid, (Emessaage) => {
         //     setEmessaages(() => [...Emessaages, Emessaage.text]);
