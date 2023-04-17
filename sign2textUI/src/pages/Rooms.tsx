@@ -63,7 +63,7 @@ export default function Rooms() {
           <Box marginTop={"20%"} >
             <Paper elevation={5} >
               <Box >
-                <Typography textAlign={"center"} variant="h3" component="h2">
+                <Typography paddingTop={"2%"} textAlign={"center"} variant="h3" component="h2">
                   Rooms
                 </Typography>
               </Box>
