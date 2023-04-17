@@ -22,7 +22,7 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
     function onSend(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setIsLoading(true);
-
+        setValue("")
         socket.emit('message', { topic: roomid, message: value.toString() }, () => {
             console.log("messSent", value.toString());
             setIsLoading(false);
@@ -102,7 +102,7 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
                                 alignItems="stretch" container spacing={2}>
 
                                 <Grid item xs={9} sx={{}} >
-                                    <TextField onChange={e => setValue(e.target.value)}
+                                    <TextField value={value} onChange={e => setValue(e.target.value)}
                                         id="outlined-basic" label="Message" sx={{ padding: "2%", width: "98%" }} variant="outlined" />
                                 </Grid>
                                 <Grid item xs={3} sx={{
