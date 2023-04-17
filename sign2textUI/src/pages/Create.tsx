@@ -1,8 +1,9 @@
-import { Paper } from "@mui/material";
-// import Box from "@mui/material/Box";
+import { Alert, Box, Container, Paper } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const Create = () => {
 
@@ -11,25 +12,29 @@ const Create = () => {
   const [chatroomId, setChatroomId] = useState("");
   const [maxMembers, setMaxMembers] = useState(1);
   const [error, setError] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("") ;
-
+  const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const response = fetch(`http://18.208.236.128:3000/chatroom`, {
       method: "POST",
-      body: JSON.stringify({ name: chatroomName}),
-      headers:{"Content-Type": "application/json",
-      
-    }
+      body: JSON.stringify({ name: chatroomName }),
+      headers: {
+        "Content-Type": "application/json",
+
+      }
 
     }).then((res) => {
       setSuccessMessage("Chatroom " + chatroomName + " created successfully")
+      setTimeout(() => {
+        navigate("/rooms")
+      }, 2000);
       console.log(res)
     })
-    .catch((error) => {
-      setError(true)
-      console.log(error)
-    });
+      .catch((error) => {
+        setError(true)
+        console.log(error)
+      });
   };
 
   const handleMaxMembersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,49 +50,60 @@ const Create = () => {
   };
 
   return (
-    <Paper
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
-      }}
-    >
-      <div className="Create" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <div className="Create" >
+
+      <Container maxWidth='sm'>
+        <Box marginTop={"20%"} >
+          <Paper elevation={5} sx={{ padding: "4%" }} >
+            <form onSubmit={handleSubmit}>
+
+              <Box>
 
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Chatroom Name"
-            id="outlined-required"
-            value={chatroomName}
-            onChange={(e) => setChatroomName(e.target.value)}
-            required
-            style={{width: "100%"}}
-          />
+                <TextField
+                  label="Chatroom Name"
+                  id="outlined-required"
+                  value={chatroomName}
+                  onChange={(e) => setChatroomName(e.target.value)}
+                  required
+                  style={{ width: "100%" }}
+                />
+              </Box>
 
-          <TextField
-            label="Max Members"
-            id="outlined-number"
-            type="number"
-            value={maxMembers}
-            onChange={handleMaxMembersChange}
-            inputProps={{ min: 1, max: 100 }}
-            error={Boolean(maxMembersError)}
-            helperText={maxMembersError}
-            style={{ width: "100%" }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            
-          />
-          
-        <Button type="submit" variant="contained" color="primary" style={{ display: "block", margin: "1rem auto" }} >
-          Create Chatroom
-        </Button>
-        </form>
 
-        {/* </div>{error && <div> } */}
+              <Box>
+                {/* 
+              <TextField
+                label="Max Members"
+                id="outlined-number"
+                type="number"
+                value={maxMembers}
+                onChange={handleMaxMembersChange}
+                inputProps={{ min: 1, max: 100 }}
+                error={Boolean(maxMembersError)}
+                helperText={maxMembersError}
+                style={{ width: "100%" }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              /> */}
+              </Box>
 
-      </div>
-    </Paper>);
+              <Button type="submit" variant="contained" color="primary" style={{ display: "block", margin: "1rem auto" }} >
+                Create Chatroom
+              </Button>
+            </form>
+
+          </Paper>
+          <Box marginTop={"2%"}>
+              {successMessage != "" && <Alert severity="success">{successMessage}</Alert>}
+              {error && <Alert severity="error">Room not created</Alert>}
+            </Box>
+
+        </Box>
+      </Container>
+    </div>
+  );
 }
 
 export default Create;
