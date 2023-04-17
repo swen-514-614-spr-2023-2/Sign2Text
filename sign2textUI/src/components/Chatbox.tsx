@@ -1,6 +1,6 @@
 import { Box, Button, Grid, List, ListItem, Paper, TextField, Typography } from "@mui/material";
 import { socket } from '../utils/socket';
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 interface ChatboxProps {
     roomid: string | undefined
     height: number
@@ -19,10 +19,16 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
     const [Emessaages, setEmessaages] = useState<string[] | []>([])
     const [msgEvent, setMsgEvent] = useState([])
     const [emitted, setemitted] = useState(false)
+
+    const textField = useRef(null)
+    const message = useRef(null)
+
+
     function onSend(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setIsLoading(true);
-
+        // console.log(textField.current.target.value)
+        setValue("")
         socket.emit('message', { topic: roomid, message: value.toString() }, () => {
             console.log("messSent", value.toString());
             setIsLoading(false);
@@ -55,7 +61,8 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
 
         socket.on("message", (Emessaage: Emessaage) => {
             console.log("messReceived", Emessaage);
-            setEmessaages(() => [...Emessaages, Emessaage.message]);
+            if (Emessaage.topic === roomid) {
+            setEmessaages(() => [...Emessaages, Emessaage.message]);}
         });
         // socket.on("room#"+roomid, (Emessaage) => {
         //     setEmessaages(() => [...Emessaages, Emessaage.text]);
@@ -101,7 +108,7 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
                                 alignItems="stretch" container spacing={2}>
 
                                 <Grid item xs={9} sx={{}} >
-                                    <TextField onChange={e => setValue(e.target.value)}
+                                    <TextField value={value} ref={textField} onChange={e => setValue(e.target.value)}
                                         id="outlined-basic" label="Message" sx={{ padding: "2%", width: "98%" }} variant="outlined" />
                                 </Grid>
                                 <Grid item xs={3} sx={{
