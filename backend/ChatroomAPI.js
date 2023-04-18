@@ -111,6 +111,7 @@ app.post("/chatroom", (req, res) => {
         .map((broker) => `${broker.host}:${broker.port}`)
         .join(",");
         dbConnection.createNewRoomInDB(String(chRoomId),body['name'],{});
+        console.log(chRoomId, body['name']);
         setTimeout(()=>{
         dbConnection.getRoomInDB(String(chRoomId), body['name']);
         }, 4000);
