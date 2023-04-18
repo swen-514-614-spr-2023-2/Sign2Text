@@ -110,15 +110,20 @@ app.post("/chatroom", (req, res) => {
       const brokers = kafka.brokers
         .map((broker) => `${broker.host}:${broker.port}`)
         .join(",");
-        console.log(chRoomId, body['name']);
-        dbConnection.createNewRoomInDB(String(chRoomId),body['name'],{});
-        setTimeout(()=>{
-        dbConnection.getRoomInDB(String(chRoomId), body['name']);
-        }, 4000);
+        // dbConnection.createNewRoomInDB(String(chRoomId),body['name'],{});
+        // setTimeout(()=>{
+        // dbConnection.getRoomInDB(String(chRoomId), body['name']);
+        // }, 4000);
+
       // res.status(200).send({ topic: topicName, brokers: brokers })
     })
     .catch((err) => {
       console.error(`Error creating topic: ${err}`);
+
+      dbConnection.createNewRoomInDB(String(chRoomId),body['name'],{});
+        setTimeout(()=>{
+        dbConnection.getRoomInDB(String(chRoomId), body['name']);
+        }, 4000);
       // res.status(500).send({ error: 'Error creating topic' })
     });
   
