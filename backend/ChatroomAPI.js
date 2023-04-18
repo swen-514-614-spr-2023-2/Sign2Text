@@ -14,7 +14,7 @@ const dbConnection = new DatabaseConnection();
 
 const kafka = new Kafka({
   clientId: "my-app",
-  brokers: ["54.165.42.186:9092"],
+  brokers: ["44.215.244.102:9092"],
 });
 const admin = kafka.admin();
 const producer = kafka.producer();
