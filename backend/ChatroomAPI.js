@@ -168,7 +168,8 @@ app.put("/chatroom/users", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  console.log("Hello request on /");
+  res.status(200).end();
 });
 
 server.listen(80, () => {
