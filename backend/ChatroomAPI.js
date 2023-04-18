@@ -21,7 +21,6 @@ const producer = kafka.producer();
 const consumer = kafka.consumer({groupId: 'test-consumer-group'});
 
 const cors = require("cors");
-const DatabaseConnection = require("./Database");
 app.use(cors());
 app.use(bodyParser.json()); // for parsing application/json
 
@@ -173,6 +172,6 @@ app.get("/", (req, res) => {
   res.status(200).end();
 });
 
-server.listen(80, () => {
-  console.log("Listening on port 80");
+server.listen(3000, () => {
+  console.log("Listening on port 3000");
 });
