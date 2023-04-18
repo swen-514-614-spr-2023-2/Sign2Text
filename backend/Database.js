@@ -172,6 +172,31 @@ class DatabaseConnection{
         });
     }
 
+    storeMessageInMessageTable(message, timestamp){
+        const params = {
+            Item : {
+                "message" : {
+                    S : message
+                },
+
+                "timestamp" : {
+                    S : timestamp
+                }
+
+            },
+
+            ReturnConsumedCapacity: "TOTAL", 
+            TableName: this.#messageTable
+        };
+
+        this.#dynamodb.putItem(params, (err, data)=>{
+            if(err) console.log(err, err.stack);
+            else{
+                console.log(data);
+            }
+        })
+    }
+
     
 }
 

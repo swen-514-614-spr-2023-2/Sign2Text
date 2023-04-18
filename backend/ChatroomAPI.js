@@ -13,10 +13,11 @@ const dbConnection = new DatabaseConnection();
 
 const kafka = new Kafka({
   clientId: "my-app",
-  brokers: ["44.215.244.102:9092"],
+  brokers: ["54.165.42.186:9092"],
 });
 const admin = kafka.admin();
 const producer = kafka.producer();
+const consumer = kafka.consumer({groupId: 'test-consumer-group'});
 
 const cors = require("cors");
 const DatabaseConnection = require("./Database");
@@ -129,6 +130,19 @@ app.delete("/chatroom", (req, res) => {
 
   res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   if (chatroomService.deleteChatroom(body["roomId"])) {
+    //get all messages from kafka and store to db
+    consumer.connect()
+    .then(()=>{
+        consumer.subscribe({topics : [body['roomId']], fromBeginning: true})
+        .then(()=>{
+          consumer.run({
+            eachMessage: async ({topic, partition, message}) =>{
+              //store to db
+              dbConnection.storeMessageInMessageTable(message.value.toString(), message.timestamp);
+            }
+          })
+        }).catch(err => console.log(err));
+    })
     res.status(200).end();
   } else res.status(409).end();
 });
@@ -157,6 +171,6 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-server.listen(3000, () => {
+server.listen(80, () => {
   console.log("Listening on port 3000");
 });
