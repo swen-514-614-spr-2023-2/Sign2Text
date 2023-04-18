@@ -1,16 +1,18 @@
-import { Paper, Typography, Box, ListItemButton, ListItemText, List, ListItem, ListItemIcon } from "@mui/material"
+import { Paper, Typography, Box, ListItemButton, ListItemText, List, ListItem, ListItemIcon, IconButton } from "@mui/material"
 import { Container } from '@mui/material';
 import SimpleDialog from "../components/SimpleDialog";
 import { ThemeProvider, } from '@mui/material/styles';
 import { StyledLink, themeTut } from "../utils/styles";
 import HubIcon from '@mui/icons-material/Hub';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useState } from "react";
 
 interface Room {
   roomId: number;
   name: string;
 }
+
 export default function Rooms() {
 
   const [rooms, setrooms] = useState<Room[]>([])
@@ -29,11 +31,26 @@ export default function Rooms() {
     setOpen(false);
 
   };
+  const handleDelete = (roomid: number) => {
 
+    const response = fetch('http://localhost:3000/chatroom', {
+      method: 'DELETE',
+      headers: { "Content-Type": "application/json" },
+
+      body: JSON.stringify({ "roomId": roomid })
+    })
+      .then(response =>{ response.text()
+      setrooms(rooms)
+    })
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
 
   useEffect(() => {
+
+
     const response = fetch("http://localhost:3000/chatroom", {
-      
+
     })
       .then(response => {
         // if (!response.ok) {
@@ -42,8 +59,12 @@ export default function Rooms() {
         return response.json()
       })
       .then(data => {
-        setrooms(data)
-        setisloading(false)
+        console.log(rooms.toString());
+        console.log(data.toString());
+        
+        if(rooms.toString()!== data.toString()){
+          setrooms(data)
+          setisloading(false)}
       })
       .catch(error => {
         setisloading(false)
@@ -51,7 +72,7 @@ export default function Rooms() {
       })
 
 
-  }, [])
+  }, [rooms])
 
 
   return (
@@ -63,7 +84,7 @@ export default function Rooms() {
           <Box marginTop={"20%"} >
             <Paper elevation={5} >
               <Box >
-                <Typography textAlign={"center"} variant="h3" component="h2">
+                <Typography paddingTop={"2%"} textAlign={"center"} variant="h3" component="h2">
                   Rooms
                 </Typography>
               </Box>
@@ -91,6 +112,9 @@ export default function Rooms() {
                         </ListItemIcon>
                         <ListItemText primary={"Room " + room.name} />
                       </ListItemButton>
+                      <IconButton onClick={() => handleDelete(room.roomId)} aria-label="delete">
+                        <DeleteIcon />
+                      </IconButton>
                     </ListItem>)
 
                 })

@@ -28,15 +28,18 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
         event.preventDefault();
         setIsLoading(true);
         // console.log(textField.current.target.value)
-        setValue("")
         socket.emit('message', { topic: roomid, message: value.toString() }, () => {
             console.log("messSent", value.toString());
+           
             setIsLoading(false);
         });
+         setValue("")
+
         // socket.timeout(5000).emit('chat message', {roomId : roomid, text : value.toString()}, () => {
         //     setIsLoading(false);
         //     setValue("")
         // });
+        
     }
 
 

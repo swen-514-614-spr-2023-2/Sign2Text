@@ -60,7 +60,7 @@ const consumerRun = async (topic) => {
 
     await consumer.stop();
     // const topics = await admin.listTopics();
-    console.log("TOPIC!!!",topics);
+    console.log("TOPIC!!!",topic);
     await consumer.subscribe({
       topic: topic,
       fromBeginning: true,

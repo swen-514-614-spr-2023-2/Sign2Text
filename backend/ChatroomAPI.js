@@ -60,7 +60,7 @@ app.post("/chatroom", (req, res) => {
    // create a Kafka producer instance
    const kafka = new Kafka({
     clientId: "my-app",
-    brokers: ["44.215.244.102:9092"],
+    brokers: ["localhost:9092"],
   });
 
   // Create an admin client
@@ -98,7 +98,7 @@ app.post("/chatroom", (req, res) => {
 app.delete("/chatroom", (req, res) => {
   console.log("Recieved request to delete chatroom");
   const body = req.body;
-  console.log(`Body: ${body}`);
+  console.log(body);
   if (chatroomService.deleteChatroom(body["roomId"])) {
     res.status(200).end();
   } else res.status(409).end();
