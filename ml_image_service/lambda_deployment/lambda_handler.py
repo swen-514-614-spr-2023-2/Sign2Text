@@ -1,18 +1,25 @@
+import numpy as np
+import sagemaker
+from sagemaker.tensorflow.model import TensorFlowModel
 import cv2
 import numpy as np
 import math
-import time
 from cvzone.HandTrackingModule import HandDetector
-from matplotlib import pyplot as plt
+
+sagemaker_session = sagemaker.Session(
+    default_bucket="sagemaker-us-east-1-707043296968")
+predictor = sagemaker.tensorflow.model.TensorFlowPredictor(endpoint_name="tensorflow-inference-2023-04-18-16-14-27-337",
+                                                           sagemaker_session=sagemaker_session)
 
 detector = HandDetector(maxHands=1)
 offset = 20
 imgSize = 300
 
 
-def getPrediction(file):
-
-    image_data = file.read()
+def getPrediction(event, context):
+    # Decode the base64-encoded image sent in the event
+    encoded_image = event['body']
+    image_data = base64.b64decode(encoded_image)
     image_array = np.frombuffer(image_data, dtype=np.uint8)
     img = cv2.imdecode(image_array, flags=cv2.IMREAD_COLOR)
 
@@ -49,10 +56,23 @@ def getPrediction(file):
         imgWhite = cv2.resize(imgWhite, (224, 224))
         # Normalize pixel values to the range of [0, 1]
         imgWhite = imgWhite.astype('float32') / 255
-        # plt.imshow(imgWhite, interpolation='nearest')
-        # plt.show()
         imgWhite = np.expand_dims(imgWhite, axis=0)  # Add batch dimension
 
-        return imgWhite
+        print("before_prediction: ")
+        result = predictor.predict(imgWhite)
+        print("sage result: ", result)
+        class_names = open("Model/labels.txt", "r").readlines()
+        index = np.argmax(np.array(result['predictions']))
+        class_name = class_names[index]
+        print("class_name: ", class_name)
+        return {
+            'statusCode': 200,
+            'body': class_name
+        }
+
     else:
-        return "no hand detected"
+        print("class_name: ", "none detected")
+        return {
+            'statusCode': 400,
+            'body': 'No hand detected'
+        }
