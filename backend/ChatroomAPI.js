@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const { Kafka } = require("kafkajs");
 
 const ChatroomService = require("./ChatroomService");
+const DatabaseConnection = require("./Database");
 
 const chatroomService = new ChatroomService();
 const dbConnection = new DatabaseConnection();
