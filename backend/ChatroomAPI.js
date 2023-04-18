@@ -110,8 +110,8 @@ app.post("/chatroom", (req, res) => {
       const brokers = kafka.brokers
         .map((broker) => `${broker.host}:${broker.port}`)
         .join(",");
-        dbConnection.createNewRoomInDB(String(chRoomId),body['name'],{});
         console.log(chRoomId, body['name']);
+        dbConnection.createNewRoomInDB(String(chRoomId),body['name'],{});
         setTimeout(()=>{
         dbConnection.getRoomInDB(String(chRoomId), body['name']);
         }, 4000);
