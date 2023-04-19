@@ -22,15 +22,15 @@
     "environment": [
       {
         "name": "AccessKeyId",
-        "value": ${key_id}
+        "value": "${key_id}"
       },
       {
         "name": "secretAccessKey",
-        "value": ${secret_key}
+        "value": "${secret_key}"
       },
       {
         "name": "BROKER_URL",
-        "value": ${url_broker}
+        "value": "${url_broker}"
       }
     ]
   }
