@@ -10,6 +10,6 @@ RUN npm ci --omit=dev
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 80
 
 CMD [ "node", "ChatroomAPI.js" ]
