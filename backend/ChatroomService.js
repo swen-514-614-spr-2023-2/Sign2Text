@@ -8,6 +8,7 @@ class ChatroomService{
     constructor(){
         this.#currentId = 0;
         this.#chatRoomDAO = new ChatroomCacheDAO();
+        console.log("Chatroom service instantiated...")
     }
 
     /**

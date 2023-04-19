@@ -9,6 +9,8 @@ const { Kafka } = require("kafkajs");
 const ChatroomService = require("./ChatroomService");
 const DatabaseConnection = require("./Database");
 
+console.log(process.env.AccessKeyId, process.env.secretAccessKey, process.env.BROKER_URL);
+
 const chatroomService = new ChatroomService();
 const dbConnection = new DatabaseConnection(process.env.AccessKeyId, process.env.secretAccessKey);
 
