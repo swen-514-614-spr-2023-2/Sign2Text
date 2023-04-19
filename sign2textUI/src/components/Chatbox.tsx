@@ -23,7 +23,10 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
     const submissionBox = useRef<HTMLDivElement>(null)
     const CBheight = useRef<HTMLDivElement>(null)
     const [msgHeight, setmsgHeight] = useState(0)
-    const messageElm= useRef<HTMLDivElement>(null) 
+    const messageElm= useRef(null) 
+    const subBox = useRef(null)
+
+
 
     function onSend(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -59,7 +62,7 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
         const listHeight = submissionBox?.current?.clientHeight;
         console.log(listHeight);
         
-        setmsgHeight( paperHeight - (listHeight- height) );
+        setmsgHeight( paperHeight - (listHeight*2.3) );
 
         if (!emitted) {
             socket.emit('subscribe', roomid, () => {
@@ -75,6 +78,9 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
             console.log("messReceived", Emessaage);
             
             setEmessaages(() => [...Emessaages, Emessaage.text]);
+            if (submissionBox.current) {
+                submissionBox.current.scrollTop = submissionBox.current.scrollHeight - submissionBox.current.clientHeight;
+                          }
         });
         // socket.on("room#"+roomid, (Emessaage) => {
         //     setEmessaages(() => [...Emessaages, Emessaage.text]);
@@ -99,12 +105,12 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
     return (
         <div className="Chatbox">
             <Paper ref={CBheight}  elevation={8} sx={{ position: "relative", minHeight: height}} >
-                <Typography variant="h2" padding={"4%"} textAlign="center">Chat - Room #{roomid}</Typography>
+                <Typography variant="h2" padding={"4%"} textAlign="center">Room #{roomid}</Typography>
                 <Box  display="flex" flexDirection="column" justifyContent = "space-between" >
-                    <Box sx={{ marginTop:"-3.8%", maxHeight: msgHeight, overflowY: "auto" ,backgroundColor:"#ebebeb"}}>
+                    <Box ref={submissionBox} sx={{ marginTop:"-3.8%", height: msgHeight, overflowY: "auto" ,backgroundColor:"#ebebeb"}}>
                         <List >
                             {Emessaages.map((emessage, index) => (
-                                <ListItem key={index}> <Typography>{emessage}</Typography> </ListItem>
+                                <ListItem ref={messageElm} key={index}> <Typography>{emessage}</Typography> </ListItem>
                             ))}
 
                         </List>
