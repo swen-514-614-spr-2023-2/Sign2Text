@@ -9,8 +9,11 @@ class DatabaseConnection{
     #roomTable;
     #messageTable;
 
-    constructor(region='us-east-1', roomTable='roomTable', messageTable='messageTable'){
-        AWS.config.loadFromPath('./config.json');
+    constructor(accessKeyId, secretAccessKey, region='us-east-1', roomTable='roomTable', messageTable='messageTable'){
+        AWS.config.update({
+            accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, region: region
+        });
+        //AWS.config.loadFromPath('./config.json');
 
         this.#dynamodb = new AWS.DynamoDB();
         this.#roomTable = roomTable;

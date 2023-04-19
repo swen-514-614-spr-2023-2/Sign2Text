@@ -10,11 +10,11 @@ const ChatroomService = require("./ChatroomService");
 const DatabaseConnection = require("./Database");
 
 const chatroomService = new ChatroomService();
-const dbConnection = new DatabaseConnection();
+const dbConnection = new DatabaseConnection(process.env.AccessKeyId, process.env.secretAccessKey);
 
 const kafka = new Kafka({
   clientId: "my-app",
-  brokers: ["44.215.244.102:9092"],
+  brokers: [String(process.env.BROKER_URL)],
 });
 const admin = kafka.admin();
 const producer = kafka.producer();
