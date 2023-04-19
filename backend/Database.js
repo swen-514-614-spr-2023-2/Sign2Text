@@ -1,7 +1,7 @@
 //documentation: https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/index.html
 const { DynamoDBClient, ListTablesCommand } = require('@aws-sdk/client-dynamodb');
 const AWS = require('aws-sdk');
-AWS.config.loadFromPath('./config.json');
+//AWS.config.loadFromPath('./config.json');
 
 
 class DatabaseConnection{
