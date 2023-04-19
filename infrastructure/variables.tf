@@ -44,15 +44,15 @@ variable "fargate_memory" {
 }
 
 variable "BROKER_URL" {
-  default = ""
+  default = "44.215.244.102:9092"
 }
 
 variable "access_key" {
-  default = "AKIAXSZSRG5RA27DVTT5"
+  default = ""
 }
 
 variable "secret_key" {
-  default = "h2f6nmCZCZ9+/fTyrZULn9fGHjidp8Dkr6KtfX83"
+  default = ""
 }
 
 
