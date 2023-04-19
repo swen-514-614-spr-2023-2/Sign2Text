@@ -11,8 +11,8 @@ data "template_file" "testapp" {
     fargate_cpu    = var.fargate_cpu
     fargate_memory = var.fargate_memory
     aws_region     = var.aws_region
-    key_id         = aws.access_key
-    secret_key     = aws.secret_key
+    key_id         = var.access_key
+    secret_key     = var.secret_key
     url_broker = var.BROKER_URL
     
   }

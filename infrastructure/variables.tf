@@ -46,3 +46,13 @@ variable "fargate_memory" {
 variable "BROKER_URL" {
   default = ""
 }
+
+variable "access_key" {
+  default = "AKIAXSZSRG5RA27DVTT5"
+}
+
+variable "secret_key" {
+  default = "h2f6nmCZCZ9+/fTyrZULn9fGHjidp8Dkr6KtfX83"
+}
+
+
