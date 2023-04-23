@@ -103,7 +103,7 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
 
                                 <Grid item xs={9} sx={{}} >
                                     <TextField value={value} onChange={e => setValue(e.target.value)}
-                                        id="outlined-basic" label="Message" sx={{ padding: "2%", width: "98%" }} variant="outlined" />
+                                        id="outlined-basic" label="" sx={{ padding: "2%", width: "98%" }} variant="outlined" />
                                 </Grid>
                                 <Grid item xs={3} sx={{
                                     display: "flex", justifyContent: "center",
