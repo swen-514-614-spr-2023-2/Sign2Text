@@ -14,7 +14,7 @@ const userTypes = ['ASL', 'Non-ASL'];
 
 interface SimpleDialogProps {
   open: boolean;
-  roomid: number;
+  roomid: string | undefined;
 
   onClose: () => void;
 }

@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from "react";
 
 interface Room {
-  roomId: number;
+  roomId: string | undefined;
   name: string;
 }
 export default function Rooms() {
@@ -18,9 +18,9 @@ export default function Rooms() {
 
   const [open, setOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-  const [roomID, setroomID] = useState<number>(0)
+  const [roomID, setroomID] = useState<string | undefined>("0")
 
-  const handleClickOpen = (roomid: number) => {
+  const handleClickOpen = (roomid: string | undefined) => {
     setOpen(true);
     setroomID(roomid)
   };
@@ -32,7 +32,7 @@ export default function Rooms() {
 
 
   useEffect(() => {
-    const response = fetch("http://18.208.236.128:3000/chatroom", {
+    const response = fetch("http://localhost:3000/chatroom", {
       
     })
       .then(response => {
