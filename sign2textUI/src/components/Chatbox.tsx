@@ -78,8 +78,8 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
             console.log("messReceived", Emessaage);
             
             setEmessaages(() => [...Emessaages, Emessaage.text]);
-            if (submissionBox.current) {
-                submissionBox.current.scrollTop = submissionBox.current.scrollHeight - submissionBox.current.clientHeight;
+            if (CBheight.current) {
+                CBheight.current.scrollTop = CBheight.current.scrollHeight - CBheight.current.clientHeight;
                           }
         });
         // socket.on("room#"+roomid, (Emessaage) => {
@@ -107,7 +107,7 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
             <Paper ref={CBheight}  elevation={8} sx={{ position: "relative", minHeight: height}} >
                 <Typography variant="h2" padding={"4%"} textAlign="center">Room #{roomid}</Typography>
                 <Box  display="flex" flexDirection="column" justifyContent = "space-between" >
-                    <Box ref={submissionBox} sx={{ marginTop:"-3.8%", height: msgHeight, overflowY: "auto" ,backgroundColor:"#ebebeb"}}>
+                    <Box  sx={{ marginTop:"-3.8%", height: msgHeight, overflowY: "auto" ,backgroundColor:"#ebebeb"}}>
                         <List >
                             {Emessaages.map((emessage, index) => (
                                 <ListItem ref={messageElm} key={index}> <Typography>{emessage}</Typography> </ListItem>

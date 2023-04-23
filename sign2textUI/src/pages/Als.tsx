@@ -42,7 +42,7 @@ const Als = () => {
             try {
                 const formData = new FormData();
                 formData.append("image", dataURItoBlob(imageSrc));
-                formData.append("roomId", roomid+"");
+                // formData.append("roomId", roomid+"");
 
                 const response = await fetch("http://localhost:5000/upload-image", {
                     method: "POST",
