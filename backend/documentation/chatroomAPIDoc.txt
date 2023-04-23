@@ -1,0 +1,67 @@
+1) Create a new chatroom
+POST url/chatroom
+
+Request body format
+{
+    name : "name"
+}
+
+Response body format
+{
+    roomId : "<id>"
+}
+
+Response codes: 200 = Ok
+
+
+2) Delete a chatroom
+DELETE url/chatroom
+
+Request body format
+{
+    roomId : <roomId>
+}
+
+No response body. 
+Response code 200 = Ok
+409 = Could not delete for some reason (maybe doe not exist or other reason)
+
+3) Get all chatrooms
+
+GET url/chatroom
+
+No request body needed
+
+Response body format
+[
+    {
+        roomId : <roomId>
+        name : <name>
+    },
+    {
+        roomId : <roomId>
+        name : <name>
+    }
+]
+
+
+4) Add user to chatroom
+PUT url/chatroom/users
+
+Request body format
+{
+    roomId : <roomId>,
+    user : {
+        id : <unique name that user entered>
+    }
+}
+
+Socket documentation
+
+1) 'chat message' event
+body format:
+{
+    roomId : <roomId>,
+    text : <text message>,
+    sender : <unique username of sender>
+}

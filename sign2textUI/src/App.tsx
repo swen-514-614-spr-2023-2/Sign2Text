@@ -8,27 +8,28 @@ import Create from './pages/Create';
 import Als from './pages/Als';
 import NonAls from './pages/NonAsl';
 import Navbar from './components/Navbar';
-
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { themeTut } from "./utils/styles";
 
 function App() {
 
   return (
     <div className="App">
       <Router>
+        <ThemeProvider theme={themeTut}>
+          <Navbar />
 
-        <Navbar/>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/rooms" element={<Rooms />} />
+            <Route path="/createRoom" element={<Create />} />
+            <Route path="/AlsView/:roomid" element={<Als />} />
+            <Route path="/NonAlsView/:roomid" element={<NonAls />} />
+            <Route path='*' element={<NotFound />} />
+          </Routes>
 
-        <Routes>
-          <Route  path="/" element={<Home/>}/>
-          <Route  path="/rooms" element={<Rooms/>}/>
-          <Route  path="/createRoom" element={<Create/>}/>
-          <Route  path="/AlsView/:roomid" element={<Als/>}/>
-          <Route  path="/NonAlsView/:roomid" element={<NonAls/>}/>
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-
-        <Footer/>
-
+          <Footer />
+        </ThemeProvider>
       </Router>
 
     </div>

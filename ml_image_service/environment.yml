@@ -1,0 +1,16 @@
+name: s2tpy
+
+channels:
+  - defaults
+dependencies:
+  - eventlet
+  - matplotlib
+  - flask
+  - python
+  - opencv
+  - flask-socketio
+  - tensorflow
+  - flask-cors
+  - pip:
+      - cvzone
+      - mediapipe
