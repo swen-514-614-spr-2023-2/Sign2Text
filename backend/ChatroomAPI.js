@@ -159,7 +159,7 @@ app.delete("/chatroom", (req, res) => {
 });
 
 app.get("/chatroom", (req, res) => {
-  const allRooms = chatroomService.getAllChatrooms();
+  const allRooms = chatroomService.getAllChatrooms(); ///GET FROM DYNAMODB
   console.log(`In chatroom API: ${allRooms}`);
   res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send(allRooms);
