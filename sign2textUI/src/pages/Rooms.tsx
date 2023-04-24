@@ -49,7 +49,7 @@ export default function Rooms() {
   useEffect(() => {
 
 
-    const response = fetch("http://localhost:3000/chatroom", {
+    const response = fetch(import.meta.env.VITE_CHATROOM_SERVICE_ROOMS, {
 
     })
       .then(response => {

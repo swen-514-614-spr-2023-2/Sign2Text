@@ -23,27 +23,27 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
     const submissionBox = useRef<HTMLDivElement>(null)
     const CBheight = useRef<HTMLDivElement>(null)
     const [msgHeight, setmsgHeight] = useState(0)
-    const messageElm= useRef(null) 
-    const subBox = useRef(null)
-
-
+    const messageElm = useRef(null)
+    const [paperHeight, setpaperHeight] = useState(0)
+    const [listHeight, setlistHeight] = useState(0)
 
     function onSend(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setIsLoading(true);
         // console.log(textField.current.target.value)
-        socket.emit('chat message', {roomId : roomid, text : value}, () => {
+        if(value!=""){
+        socket.emit('chat message', { roomId: roomid, text: value }, () => {
             console.log("messSent", value.toString());
-           
+
             setIsLoading(false);
-        });
-         setValue("")
+        });}
+        setValue("")
 
         // socket.timeout(5000).emit('chat message', {roomId : roomid, text : value.toString()}, () => {
         //     setIsLoading(false);
         //     setValue("")
         // });
-        
+
     }
 
 
@@ -55,14 +55,18 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
         function onDisconnect() {
             setIsConnected(false);
         }
+        if (paperHeight != undefined && listHeight != undefined && CBheight.current && submissionBox.current) {
 
-        const paperHeight = CBheight?.current?.clientHeight
-        console.log(paperHeight);
-        
-        const listHeight = submissionBox?.current?.clientHeight;
-        console.log(listHeight);
-        
-        setmsgHeight( paperHeight - (listHeight*2.3) );
+            setpaperHeight(CBheight?.current?.clientHeight)
+            console.log(paperHeight);
+
+            setlistHeight(submissionBox?.current?.clientHeight)
+            console.log(listHeight);
+
+
+            setmsgHeight(paperHeight - (listHeight * 2.3));
+        }
+
 
         if (!emitted) {
             socket.emit('subscribe', roomid, () => {
@@ -74,13 +78,13 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
         }
 
 
-        socket.on("room#"+roomid, (Emessaage: Emessaage) => {
+        socket.on("room#" + roomid, (Emessaage: Emessaage) => {
             console.log("messReceived", Emessaage);
-            
+
             setEmessaages(() => [...Emessaages, Emessaage.text]);
             if (CBheight.current) {
                 CBheight.current.scrollTop = CBheight.current.scrollHeight - CBheight.current.clientHeight;
-                          }
+            }
         });
         // socket.on("room#"+roomid, (Emessaage) => {
         //     setEmessaages(() => [...Emessaages, Emessaage.text]);
@@ -92,7 +96,7 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
         //   setFooEvents((prevMessages) => [...prevMessages, message]);
         // }
 
-    socket.on('connect', onConnect);
+        socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         // socket.on('foo', onFooEvent);
 
@@ -104,10 +108,10 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
     }, [Emessaages]);
     return (
         <div className="Chatbox">
-            <Paper ref={CBheight}  elevation={8} sx={{ position: "relative", minHeight: height}} >
+            <Paper ref={CBheight} elevation={8} sx={{ position: "relative", minHeight: height }} >
                 <Typography variant="h2" padding={"4%"} textAlign="center">Room #{roomid}</Typography>
-                <Box  display="flex" flexDirection="column" justifyContent = "space-between" >
-                    <Box  sx={{ marginTop:"-3.8%", height: msgHeight, overflowY: "auto" ,backgroundColor:"#ebebeb"}}>
+                <Box display="flex" flexDirection="column" justifyContent="space-between" >
+                    <Box sx={{ marginTop: "-3.8%", height: msgHeight, overflowY: "auto" ,backgroundColor:"#f7fbff" }}>
                         <List >
                             {Emessaages.map((emessage, index) => (
                                 <ListItem ref={messageElm} key={index}> <Typography>{emessage}</Typography> </ListItem>
@@ -116,14 +120,14 @@ const Chatbox = ({ roomid, height }: ChatboxProps) => {
                         </List>
                     </Box>
 
-                    <Box ref ={submissionBox} sx={{ position: "absolute", bottom: 0, width: "100%" }}>
+                    <Box ref={submissionBox} sx={{ position: "absolute", bottom: 0, width: "100%" }}>
                         <form onSubmit={onSend}>
                             <Grid direction="row"
                                 justifyContent="center"
                                 alignItems="stretch" container spacing={2}>
 
                                 <Grid item xs={9} sx={{}} >
-                                    <TextField value={value}  onChange={e => setValue(e.target.value)}
+                                    <TextField value={value} onChange={e => setValue(e.target.value)}
                                         id="outlined-basic" label="" sx={{ padding: "2%", width: "98%" }} variant="outlined" />
                                 </Grid>
                                 <Grid item xs={3} sx={{

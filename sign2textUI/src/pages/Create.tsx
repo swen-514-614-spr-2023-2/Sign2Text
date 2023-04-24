@@ -18,7 +18,7 @@ const Create = () => {
   const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = fetch(`http://localhost:3000/chatroom`, {
+    const response = fetch(import.meta.env.VITE_CHATROOM_SERVICE_CREATE, {
       method: "POST",
       body: JSON.stringify({ name: chatroomName }),
       headers: {
@@ -30,7 +30,7 @@ const Create = () => {
       setSuccessMessage("Chatroom " + chatroomName + " created successfully")
       setTimeout(() => {
         navigate("/rooms")
-      }, 2000);
+      }, 1000);
       console.log(res)
     })
       .catch((error) => {
