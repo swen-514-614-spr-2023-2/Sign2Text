@@ -25,12 +25,14 @@ const Create = () => {
       }
 
     }).then((res) => {
-      //change .ok
+      if(res.ok){
+
       setSuccessMessage("Chatroom " + chatroomName + " created successfully")
       setTimeout(() => {
         navigate("/rooms")
-      }, 1000);
+      }, 1200);
       console.log(res)
+    }
 
     })
       .catch((error) => {
