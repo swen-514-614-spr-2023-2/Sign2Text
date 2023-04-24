@@ -38,13 +38,13 @@ const Als = () => {
         if (imageSrc) {
             setUrl(imageSrc);
             setImage(imageSrc);
-
+            console.log(imageSrc);
             try {
                 const formData = new FormData();
                 formData.append("image", dataURItoBlob(imageSrc));
-                formData.append("roomId", roomid+"");
+                // formData.append("roomId", roomid+"");
 
-                const response = await fetch("http://3.233.207.236:5000/upload-image", {
+                const response = await fetch(import.meta.env.VITE_IMAGE_SERVICE, {
                     method: "POST",
                     body: formData,
                 });

@@ -1,12 +1,11 @@
-const express = require("express");
+const express = require('express');
 
 const app = express();
-const http = require("http");
+const http = require('http');
 const server = http.Server(app);
-const bodyParser = require("body-parser");
-const { Kafka } = require("kafkajs");
+const bodyParser = require('body-parser');
 
-const ChatroomService = require("./ChatroomService");
+const ChatroomService = require('./ChatroomService');
 
 const chatroomService = new ChatroomService();
 const kafka = new Kafka({
@@ -16,31 +15,39 @@ const kafka = new Kafka({
 const admin = kafka.admin();
 const producer = kafka.producer();
 
-const cors = require("cors");
+
+const cors = require('cors');
 app.use(cors());
-app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.json()) // for parsing application/json
 
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
+
+
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+      }
 });
 
-io.on("connection", (socket) => {
-  console.log("A user connected");
 
-  socket.on("disconnect", (socket) => {
-    console.log("User disconnected");
-  });
 
-  socket.on("chat message", (msg) => {
-    console.log(msg);
-    if (chatroomService.sendMessage(msg)) {
-      io.emit(`room#${msg["roomId"]}`, msg);
-    }
-  });
+io.on('connection',(socket)=>{
+    console.log("A user connected");
+
+    socket.on('disconnect',(socket)=>{
+        console.log('User disconnected');
+    });
+
+    socket.on('chat message',(msg)=>{
+        console.log(msg);
+        if(chatroomService.sendMessage(msg)){
+            io.emit(`room#${msg['roomId']}`, msg);
+        }
+    });
+
 });
+
+
 
 //need an api method that image service will call to send text message.
 app.post("/prediction", (req, res) => {
@@ -149,10 +156,14 @@ app.put("/chatroom/users", (req, res) => {
   } else res.status(409).end();
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
+app.get('/',(req,res)=>{
+    res.send('Hello World');
 });
 
-server.listen(3000, () => {
-  console.log("Listening on port 3000");
+
+
+
+
+server.listen(3000,()=>{
+    console.log("Listening on port 3000");
 });

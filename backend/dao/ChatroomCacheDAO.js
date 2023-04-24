@@ -32,6 +32,7 @@ class ChatroomCacheDAO extends AbstractDAO{
      * @returns true if chatroom was deleted, else false
      */
     deleteChatroom(room_id){
+        // console.log(map.toString() );
         return this.#map.delete(room_id);
     };
 
