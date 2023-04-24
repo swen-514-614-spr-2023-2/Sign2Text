@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "az_count" {
-  default     = "2"
+  default     = "1"
   description = "number of availability zones in above region"
 }
 
