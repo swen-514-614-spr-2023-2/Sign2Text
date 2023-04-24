@@ -17,7 +17,7 @@ const io = socketio(server, {
 
 const kafka = new Kafka({
   clientId: "my-app",
-  brokers: ["localhost:9092"],
+  brokers: [`${process.env.KAFKA_IP}:9092`],
 });
 const admin = kafka.admin()
 const producer = kafka.producer();
