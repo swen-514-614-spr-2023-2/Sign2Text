@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "az_count" {
-  default     = "1"
+  default     = "2"
   description = "number of availability zones in above region"
 }
 
@@ -25,7 +25,7 @@ variable "app_port" {
 }
 
 variable "app_count" {
-  default     = "1" #choose 2 bcz i have choosen 2 AZ
+  default     = "2" #choose 2 bcz i have choosen 2 AZ
   description = "numer of docker containers to run"
 }
 
