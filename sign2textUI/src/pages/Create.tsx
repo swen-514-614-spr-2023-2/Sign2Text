@@ -28,7 +28,7 @@ const Create = () => {
       setSuccessMessage("Chatroom " + chatroomName + " created successfully")
       setTimeout(() => {
         navigate("/rooms")
-      }, 2000);
+      }, 1500);
       console.log(res)
     })
       .catch((error) => {
