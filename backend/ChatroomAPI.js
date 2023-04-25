@@ -95,29 +95,29 @@ app.post("/chatroom", async(req, res) => {
   const chRoomId = await chatroomService.createChatroom(body["name"]);
 
   // Connect to Kafka
-  // admin
-  //   .connect()
-  //   .then(() => {
-  //     console.log("Connected to Kafka");
-  //     // Create a new topic
-  //     return admin.createTopics({
-  //       topics: [{ topic: chRoomId.toString() }],
-  //     });
-  //   })
-  //   .then(() => {
-  //     console.log(`Created topic ${chRoomId.toString()}`);
-  //     // Return the topic and broker details
-  //     const brokers = kafka.brokers
-  //       .map((broker) => `${broker.host}:${broker.port}`)
-  //       .join(",");
+  admin
+    .connect()
+    .then(() => {
+      console.log("Connected to Kafka");
+      // Create a new topic
+      return admin.createTopics({
+        topics: [{ topic: chRoomId.toString() }],
+      });
+    })
+    .then(() => {
+      console.log(`Created topic ${chRoomId.toString()}`);
+      // Return the topic and broker details
+      const brokers = kafka.brokers
+        .map((broker) => `${broker.host}:${broker.port}`)
+        .join(",");
         
 
-  //     // res.status(200).send({ topic: topicName, brokers: brokers })
-  //   })
-  //   .catch((err) => {
-  //     console.error(`Error creating topic: ${err}`);
+      // res.status(200).send({ topic: topicName, brokers: brokers })
+    })
+    .catch((err) => {
+      console.error(`Error creating topic: ${err}`);
 
-  //   });
+    });
   
   res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send({ roomId: chRoomId });
