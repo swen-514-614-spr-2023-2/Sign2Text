@@ -8,6 +8,7 @@ class DatabaseConnection{
     #dynamodb;
     #roomTable;
     #messageTable;
+    allRooms;
 
     constructor(accessKeyId, secretAccessKey, region='us-east-1', roomTable='roomTable', messageTable='messageTable'){
         AWS.config.update({
@@ -18,6 +19,7 @@ class DatabaseConnection{
         this.#dynamodb = new AWS.DynamoDB();
         this.#roomTable = roomTable;
         this.#messageTable = messageTable;
+        this.allRooms = undefined;
 
         this.init();
 
@@ -127,12 +129,15 @@ class DatabaseConnection{
         var params = {
             Item : {
                 "roomName" : {
-                    S : roomName
+                    S : roomId
                 },
 
                 "roomId" : {
                     S : roomId
                 },
+                "NAME" : {
+                    S: roomName
+                }
 
             },
 
@@ -159,10 +164,13 @@ class DatabaseConnection{
         var params = {
             Key: {
                 "roomName": {
-                    S: roomName
+                    S: roomId
                 },
                 "roomId": {
                     S: roomId
+                },
+                "NAME" : {
+                    S: roomName
                 }
             },
             TableName : this.#roomTable
@@ -200,7 +208,78 @@ class DatabaseConnection{
         })
     }
 
+    generateNewId(){
+        var num = this.rng(0,10000000);
+        console.log(num, typeof(num));
+
+        var params = {
+            Key: {
+                "roomName": {
+                    S: num
+                },
+                "roomId": {
+                    S: num
+                }
+            },
+            TableName : this.#roomTable
+
+        };
+
+        this.#dynamodb.getItem(params,(err,data)=>{
+            if(err) console.log(err, err.stack);
+            else{
+                if(data.Item){
+                    return this.generateNewId();
+                }
+                else{
+                    console.log(num);
+                    return num;
+                }
+            }
+        });
+    }
+
+    rng(min,max){
+        return ""+Math.floor((Math.random() * (max - min) + min));
+    }
+
+    
+    getAllRoomsInDB(){
+        console.log("here");
+        var params = {
+            ExpressionAttributeNames: {
+                "#N" : "NAME",
+                "#I" : "roomId"
+            },
+
+            ProjectionExpression: "#N, #I",
+            TableName: this.#roomTable
+
+        };
+
+        this.#dynamodb.scan(params,(err,data)=>{
+            if(err) console.log(err);
+            else{
+                console.log(data);
+                let ret = []
+                data['Items'].forEach(item => {
+                    console.log(item);
+                    let t = {};
+                    t['roomId'] = item['roomId'];
+                    t['name'] = item['NAME'];
+                    ret.push(t);
+                });
+                console.log("finish");
+                this.allRooms = ret;
+            }
+        });
+    }
     
 }
 
+
 module.exports = DatabaseConnection;
+
+
+
+

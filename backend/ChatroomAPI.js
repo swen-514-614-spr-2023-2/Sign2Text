@@ -7,12 +7,10 @@ const bodyParser = require("body-parser");
 const { Kafka } = require("kafkajs");
 
 const ChatroomService = require("./ChatroomService");
-const DatabaseConnection = require("./Database");
 
 console.log(process.env.AccessKeyId, process.env.secretAccessKey, process.env.BROKER_URL);
 
-const chatroomService = new ChatroomService();
-const dbConnection = new DatabaseConnection(process.env.AccessKeyId, process.env.secretAccessKey);
+const chatroomService = new ChatroomService(process.env.AccessKeyId, process.env.secretAccessKey);
 
 const kafka = new Kafka({
   clientId: "my-app",
@@ -112,21 +110,13 @@ app.post("/chatroom", (req, res) => {
       const brokers = kafka.brokers
         .map((broker) => `${broker.host}:${broker.port}`)
         .join(",");
-        // dbConnection.createNewRoomInDB(String(chRoomId),body['name'],{});
-        // setTimeout(()=>{
-        // dbConnection.getRoomInDB(String(chRoomId), body['name']);
-        // }, 4000);
+        
 
       // res.status(200).send({ topic: topicName, brokers: brokers })
     })
     .catch((err) => {
       console.error(`Error creating topic: ${err}`);
 
-      dbConnection.createNewRoomInDB(String(chRoomId),body['name'],{});
-        setTimeout(()=>{
-        dbConnection.getRoomInDB(String(chRoomId), body['name']);
-        }, 4000);
-      // res.status(500).send({ error: 'Error creating topic' })
     });
   
   res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
@@ -149,7 +139,7 @@ app.delete("/chatroom", (req, res) => {
           consumer.run({
             eachMessage: async ({topic, partition, message}) =>{
               //store to db
-              dbConnection.storeMessageInMessageTable(message.value.toString(), message.timestamp);
+              //dbConnection.storeMessageInMessageTable(message.value.toString(), message.timestamp);
             }
           })
         }).catch(err => console.log(err));
@@ -183,6 +173,6 @@ app.get("/", (req, res) => {
   res.status(200).end();
 });
 
-server.listen(80, () => {
-  console.log("Listening on port 80");
+server.listen(3000, () => {
+  console.log("Listening on port 3000");
 });

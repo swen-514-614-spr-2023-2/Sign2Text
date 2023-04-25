@@ -1,13 +1,17 @@
 const ChatroomCacheDAO = require('./dao/ChatroomCacheDAO');
 const Chatroom = require('./Chatroom');
+const DatabaseConnection = require("./Database");
+
 
 class ChatroomService{
     #chatRoomDAO;
     #currentId;
+    #dbConnection;
 
-    constructor(){
+    constructor(AccessKeyId,secretAccessKey){
         this.#currentId = 0;
         this.#chatRoomDAO = new ChatroomCacheDAO();
+        this.#dbConnection = new DatabaseConnection(AccessKeyId,secretAccessKey);
         console.log("Chatroom service instantiated...")
     }
 
@@ -54,7 +58,8 @@ class ChatroomService{
      * @returns id of created chatroom
      */
     createChatroom(name){
-        let cm = new Chatroom(this.#currentId++, name);
+        const newId = this.#dbConnection.generateNewId();
+        let cm = new Chatroom(newId, name);
         this.#chatRoomDAO.createChatroom(cm)
         console.log(`Chatroom with id ${cm.id} created`);
         return cm.id;
@@ -64,9 +69,18 @@ class ChatroomService{
         return this.#chatRoomDAO.deleteChatroom(roomId);
     };
 
-    getAllChatrooms(){
-        return this.#chatRoomDAO.getAll();
+    async getAllChatrooms(){
+        //return this.#chatRoomDAO.getAll();
+        this.#dbConnection.getAllRoomsInDB();
+        while (!this.#dbConnection.allRooms) {
+            
+        }
+        const ret = this.#dbConnection.allRooms;
+        this.#dbConnection.allRooms = undefined;
+        return ret;
     }
+
+    
 }
 
 module.exports = ChatroomService;
