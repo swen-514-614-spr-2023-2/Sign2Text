@@ -85,39 +85,39 @@ try {
  * Create a new room
  * body format: {name: #}
  */
-app.post("/chatroom", (req, res) => {
+app.post("/chatroom", async(req, res) => {
   // use async/await to handle Kafka promise
   console.log("Recieved request to create chatroom");
   const body = req.body;
   console.log(body);
   
   const topicName = req.body.name;
-  const chRoomId = chatroomService.createChatroom(body["name"]);
+  const chRoomId = await chatroomService.createChatroom(body["name"]);
 
   // Connect to Kafka
-  admin
-    .connect()
-    .then(() => {
-      console.log("Connected to Kafka");
-      // Create a new topic
-      return admin.createTopics({
-        topics: [{ topic: chRoomId.toString() }],
-      });
-    })
-    .then(() => {
-      console.log(`Created topic ${chRoomId.toString()}`);
-      // Return the topic and broker details
-      const brokers = kafka.brokers
-        .map((broker) => `${broker.host}:${broker.port}`)
-        .join(",");
+  // admin
+  //   .connect()
+  //   .then(() => {
+  //     console.log("Connected to Kafka");
+  //     // Create a new topic
+  //     return admin.createTopics({
+  //       topics: [{ topic: chRoomId.toString() }],
+  //     });
+  //   })
+  //   .then(() => {
+  //     console.log(`Created topic ${chRoomId.toString()}`);
+  //     // Return the topic and broker details
+  //     const brokers = kafka.brokers
+  //       .map((broker) => `${broker.host}:${broker.port}`)
+  //       .join(",");
         
 
-      // res.status(200).send({ topic: topicName, brokers: brokers })
-    })
-    .catch((err) => {
-      console.error(`Error creating topic: ${err}`);
+  //     // res.status(200).send({ topic: topicName, brokers: brokers })
+  //   })
+  //   .catch((err) => {
+  //     console.error(`Error creating topic: ${err}`);
 
-    });
+  //   });
   
   res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send({ roomId: chRoomId });
@@ -148,8 +148,8 @@ app.delete("/chatroom", (req, res) => {
   } else res.status(409).end();
 });
 
-app.get("/chatroom", (req, res) => {
-  const allRooms = chatroomService.getAllChatrooms(); ///GET FROM DYNAMODB
+app.get("/chatroom", async(req, res) => {
+  const allRooms = await chatroomService.getAllChatrooms(); ///GET FROM DYNAMODB
   console.log(`In chatroom API: ${allRooms}`);
   res.setHeader('Referrer-Policy', 'origin-when-cross-origin');
   res.status(200).send(allRooms);

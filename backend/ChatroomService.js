@@ -57,8 +57,11 @@ class ChatroomService{
      * @param {*} name name of chatroom to be created
      * @returns id of created chatroom
      */
-    createChatroom(name){
-        const newId = this.#dbConnection.generateNewId();
+    async createChatroom(name){
+        //const newId = this.#dbConnection.generateNewId();
+        await this.#dbConnection.createNewRoomInDB(name,{});
+        const newId = this.#dbConnection.lastRoomCreated;
+        this.#dbConnection.lastRoomCreated = undefined
         let cm = new Chatroom(newId, name);
         this.#chatRoomDAO.createChatroom(cm)
         console.log(`Chatroom with id ${cm.id} created`);
@@ -71,12 +74,9 @@ class ChatroomService{
 
     async getAllChatrooms(){
         //return this.#chatRoomDAO.getAll();
-        this.#dbConnection.getAllRoomsInDB();
-        while (!this.#dbConnection.allRooms) {
-            
-        }
-        const ret = this.#dbConnection.allRooms;
-        this.#dbConnection.allRooms = undefined;
+        await this.#dbConnection.getAllRoomsInDB();
+        var ret = this.#dbConnection.allRooms;
+        console.log("chroom service",ret);
         return ret;
     }
 

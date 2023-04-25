@@ -9,6 +9,7 @@ class DatabaseConnection{
     #roomTable;
     #messageTable;
     allRooms;
+    lastRoomCreated;
 
     constructor(accessKeyId, secretAccessKey, region='us-east-1', roomTable='roomTable', messageTable='messageTable'){
         AWS.config.update({
@@ -125,39 +126,55 @@ class DatabaseConnection{
         this.createTableInDBIfNotExists(params);
     }
 
-    createNewRoomInDB(roomId, roomName, otherParams={}){
-        var params = {
-            Item : {
-                "roomName" : {
-                    S : roomId
+    async createNewRoomInDB(roomName, otherParams={}){
+        var complete = false;
+        while(!complete){
+            var roomId = this.rng(0,1000000);
+            var params = {
+                Item : {
+                    "roomName" : {
+                        S : roomId
+                    },
+
+                    "roomId" : {
+                        S : roomId
+                    },
+                    "NAME" : {
+                        S: roomName
+                    }
+
                 },
 
-                "roomId" : {
-                    S : roomId
+                Expected: {
+                    'roomId': {
+                        Exists: false
+                    }
                 },
-                "NAME" : {
-                    S: roomName
-                }
 
-            },
-
-            ReturnConsumedCapacity : "TOTAL",
-            TableName : this.#roomTable
-        };
-
-        for(const [key, value] of Object.entries(otherParams)){
-            let temp = params['Item'];
-            temp[key] = {
-                S: value
+                ReturnConsumedCapacity : "TOTAL",
+                TableName : this.#roomTable
             };
-        }
 
-        this.#dynamodb.putItem(params, (err,data)=>{
-            if(err) console.log(err, err.stack);
-            else{
-                console.log(data);
+            for(const [key, value] of Object.entries(otherParams)){
+                let temp = params['Item'];
+                temp[key] = {
+                    S: value
+                };
             }
-        });
+
+            await this.#dynamodb.putItem(params, (err,data)=>{
+                //if(err) console.log(roomId,err, err.stack);
+                //else{
+                 //   console.log(data);
+                //}
+            }).promise().then(data =>{
+                complete=true;
+                this.lastRoomCreated = roomId;
+            }).catch(async (e) =>{
+                console.log("err");
+                complete=false;
+            });
+        }
     }
 
     getRoomInDB(roomId, roomName){
@@ -244,8 +261,8 @@ class DatabaseConnection{
     }
 
     
-    getAllRoomsInDB(){
-        console.log("here");
+    async getAllRoomsInDB(){
+        console.log("248","here");
         var params = {
             ExpressionAttributeNames: {
                 "#N" : "NAME",
@@ -257,11 +274,24 @@ class DatabaseConnection{
 
         };
 
-        this.#dynamodb.scan(params,(err,data)=>{
+        var v;
+        await this.#dynamodb.scan(params,(err,data)=>{
             if(err) console.log(err);
             else{
-                console.log(data);
-                let ret = []
+                //console.log(data,"264");
+                // let ret = []
+                // data['Items'].forEach(item => {
+                //     console.log(item);
+                //     let t = {};
+                //     t['roomId'] = item['roomId'];
+                //     t['name'] = item['NAME'];
+                //     ret.push(t);
+                // });
+                // console.log("finish");
+                // return ret;
+            }
+        }).promise().then((data)=>{
+            let ret = []
                 data['Items'].forEach(item => {
                     console.log(item);
                     let t = {};
@@ -271,8 +301,10 @@ class DatabaseConnection{
                 });
                 console.log("finish");
                 this.allRooms = ret;
-            }
+                //return ret;
         });
+
+        //console.log("277",ret);
     }
     
 }
