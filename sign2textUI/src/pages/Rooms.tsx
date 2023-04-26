@@ -32,7 +32,7 @@ export default function Rooms() {
 
 
   useEffect(() => {
-    const response = fetch("http://myapp-load-balancer-166118288.us-east-1.elb.amazonaws.com/chatroom", {
+    const response = fetch(import.meta.env.VITE_CHATROOM_SERVICE_ROOMS, {
       
     })
       .then(response => {
