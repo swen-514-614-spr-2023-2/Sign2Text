@@ -44,7 +44,7 @@ const Als = () => {
                 formData.append("image", dataURItoBlob(imageSrc));
                 formData.append("roomId", roomid+"");
 
-                const response = await fetch("import.meta.env.VITE_IMAGE_SERVICE", {
+                const response = await fetch(import.meta.env.VITE_IMAGE_SERVICE, {
                     method: "POST",
                     body: formData,
                 });
