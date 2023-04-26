@@ -17,8 +17,10 @@ const io = socketio(server, {
 
 
 const myPromise = new Promise((resolve, reject) => {
-  
+  console.log("waiting for Kafka  ip");
   if(process.env.KAFKA_IP!= undefined) {
+    console.log("got Kafka  ip");
+
      resolve("got env");
   }
  }); 
