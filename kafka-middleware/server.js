@@ -15,6 +15,18 @@ const io = socketio(server, {
   },
 });
 
+
+const myPromise = new Promise((resolve, reject) => {
+  
+  if($process.env.KAFKA!= undefined) {
+     resolve("got env");
+  }
+ }); 
+
+
+
+ myPromise.then(()=>{
+
 const kafka = new Kafka({
   clientId: "my-app",
   brokers: ["localhost:9092"],
@@ -90,3 +102,4 @@ run().catch(console.error);
 server.listen(3001, () => {
   console.log("Server listening on port 3001");
 });
+ })
