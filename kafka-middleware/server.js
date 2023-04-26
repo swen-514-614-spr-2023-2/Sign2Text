@@ -18,18 +18,18 @@ const io = socketio(server, {
 
 const myPromise = new Promise((resolve, reject) => {
   
-  if($process.env.KAFKA!= undefined) {
+  if(process.env.KAFKA_IP!= undefined) {
      resolve("got env");
   }
  }); 
 
 
 
- myPromise.then(()=>{
+myPromise.then(()=>{
 
 const kafka = new Kafka({
   clientId: "my-app",
-  brokers: ["localhost:9092"],
+  brokers: [`${process.env.KAFKA_IP}:9092`],
 });
 const admin = kafka.admin()
 const producer = kafka.producer();
