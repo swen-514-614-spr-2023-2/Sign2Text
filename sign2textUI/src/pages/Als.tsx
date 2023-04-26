@@ -104,18 +104,6 @@ const Als = () => {
                 </Grid>
 
 
-                {url && (
-                    <>
-                        <Box marginTop={"40%"}>
-                            <Button onClick={() => { setUrl(null); }}>
-                                delete
-                            </Button>
-                        </Box>
-                        <div>
-                            <img src={url} alt="Screenshot" />
-                        </div>
-                    </>
-                )}
             </Container>
         </div>
 
