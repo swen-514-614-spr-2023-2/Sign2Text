@@ -3,5 +3,5 @@ import { io } from 'socket.io-client';
 // "undefined" means the URL will be computed from the `window.location` object
 // const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:3000';
 
-export const socket = io(import.meta.env.VITE_SOCKET);
+export const socket = io('http://54.85.26.46:3001');
 

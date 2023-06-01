@@ -33,7 +33,7 @@ export default function Rooms() {
   };
   const handleDelete = (roomid: number) => {
 
-    const response = fetch(import.meta.env.VITE_CHATROOM_SERVICE_ROOMS, {
+    const response = fetch('http://18.208.236.128:3000/chatroom', {
       method: 'DELETE',
       headers: { "Content-Type": "application/json" },
 
@@ -49,7 +49,7 @@ export default function Rooms() {
   useEffect(() => {
 
 
-    const response = fetch(import.meta.env.VITE_CHATROOM_SERVICE_ROOMS, {
+    const response = fetch('http://18.208.236.128:3000/chatroom', {
 
     })
       .then(response => {
